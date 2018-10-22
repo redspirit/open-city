@@ -10,7 +10,7 @@ let Engine2d = function(fps) {
     let bitmaps = [];
     let configUrl = '';
     let config = {};
-    let containers = {};
+    let containers = [];
     let scene = {
         width: 0,
         height: 0,
@@ -141,11 +141,11 @@ let Engine2d = function(fps) {
         });
     }
 
-    this.Container = function (id, width, height) {
+    this.Container = function (x, y, width, height) {
         let container = this;
 
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.visible = true;
@@ -154,9 +154,9 @@ let Engine2d = function(fps) {
         this.collisionGroup = null;
 
 
-        this.addSprite = function (id, spriteName, position) {
+        this.addSprite = function (id, spriteName, position, y) {
             let sprite = new self.Sprite(spriteName);
-            sprite.setPosition(position);
+            sprite.setPosition(position, y);
             this.sprites[id] = sprite;
             return this;
         }
@@ -177,7 +177,7 @@ let Engine2d = function(fps) {
             return this;
         };
         this.setHeight = function (height) {
-            this.width = height;
+            this.height = height;
             return this;
         }
         this.setOverflow = function (overflow) {
@@ -206,7 +206,7 @@ let Engine2d = function(fps) {
             return this;
         }
 
-        containers[id] = this;
+        containers.push(this);
 
     }
 
@@ -218,8 +218,7 @@ let Engine2d = function(fps) {
 
         scene.ctx.clearRect(0, 0, scene.width, scene.height);
 
-        Object.keys(containers).forEach(function (containerId) {
-            let container = containers[containerId];
+        containers.forEach(function (container) {
 
             let sprites = container.getSprites();
 

@@ -5,6 +5,17 @@ let BattleCity = function (canvas) {
     let engine = new Engine2d(30);
     let map = [];
 
+    let inputActions = {
+        Up:     1,
+        Down:   2,
+        Left:   3,
+        Rigth:  4,
+        Fire:   5,
+        Pause:  6,
+        Reset:  7
+    }
+    let keysStatus = {};
+    let keys = {};
 
     // INIT
     engine.initScene(canvas, 480, 480);
@@ -14,6 +25,7 @@ let BattleCity = function (canvas) {
 
     this.onReady = engine.load;
     this.onUpdate = engine.onUpdate;
+    this.inputActions = inputActions;
 
     let loadMap = function (mapUrl, callback) {
         map = [];
@@ -33,8 +45,19 @@ let BattleCity = function (canvas) {
         oReq.send();
     };
 
-    engine.load(function () {
+    let reset = function () {
+        keysStatus[inputActions.Up] = false;
+        keysStatus[inputActions.Down] = false;
+        keysStatus[inputActions.Left] = false;
+        keysStatus[inputActions.Rigth] = false;
+        keysStatus[inputActions.Fire] = false;
+        keysStatus[inputActions.Pause] = false;
+        keysStatus[inputActions.Reset] = false;
+    };
 
+    let myTank =
+
+    engine.load(function () {
 
         // new engine
         //     .Container('eagle_container_2', 0, 0)
@@ -43,25 +66,31 @@ let BattleCity = function (canvas) {
         //     .spriteState(1, 'die');
         //
 
+        myTank = new engine
+            .Container(160, 416, 32, 32)
+            .addSprite(1, 'tank_1', 0, 0)
+            .spriteState(1, 'right');
 
-
+        reset();
     });
 
     let prepareMapObjects = function () {
 
-        let x = 0;
-        let y = 0;
+        let cols = -1;
+        let rows = -1;
 
         map.forEach(function (row) {
-            y += 16;
-            x = 0;
+            rows += 1;
+            cols = -1;
             row.forEach(function (index) {
-                x += 16;
+                cols += 1;
+
+                let x = cols * 16 + 32;
+                let y = rows * 16 + 32;
 
                 if(index === 1) {
                     new engine
-                        .Container('brick_' + x + '_' + y, 0, 0)
-                        .setPosition(x, y)
+                        .Container(x, y, 0, 0)
                         .addSprite(1, 'bricks', [
                             [0,0,0], [8,0,1],
                             [0,8,1], [8,8,0]
@@ -70,38 +99,33 @@ let BattleCity = function (canvas) {
 
                 if(index === 2) {
                     new engine
-                        .Container('iron_' + x + '_' + y, 0, 0)
-                        .setPosition(x, y)
-                        .addSprite(1, 'iron', [[0, 0]]);
+                        .Container(x, y, 0, 0)
+                        .addSprite(1, 'iron', 0, 0);
                 };
 
                 if(index === 3) {
                     new engine
-                        .Container('grass_' + x + '_' + y, 0, 0)
-                        .setPosition(x, y)
-                        .addSprite(1, 'grass', [[0, 0]]);
+                        .Container(x, y, 0, 0)
+                        .addSprite(1, 'grass', 0, 0);
                 };
 
                 if(index === 4) {
                     new engine
-                        .Container('ice_' + x + '_' + y, 0, 0)
-                        .setPosition(x, y)
-                        .addSprite(1, 'ice', [[0, 0]]);
+                        .Container(x, y, 0, 0)
+                        .addSprite(1, 'ice', 0, 0);
                 };
 
                 if(index === 5) {
                     new engine
-                        .Container('water_' + x + '_' + y, 32, 32)
-                        .setPosition(x, y)
-                        .addSprite(1, 'water', [[0, 0]])
+                        .Container(x, y, 32, 32)
+                        .addSprite(1, 'water', 0, 0)
                         .spriteState(1, 'idle');
                 };
 
                 if(index === 6) {
                     new engine
-                        .Container('eagle_container', 0, 0)
-                        .setPosition(x, y)
-                        .addSprite(1, 'eagle', [[0, 0]])
+                        .Container(x, y, 0, 0)
+                        .addSprite(1, 'eagle', 0, 0)
                         .spriteState(1, 'live');
                 };
 
@@ -113,10 +137,46 @@ let BattleCity = function (canvas) {
 
     }
 
+
+    // METHODS *********************************************
+
     this.setMap = function (url) {
         loadMap(url, function () {
             prepareMapObjects()
         });
     }
+
+    this.setAction = function (key, action) {
+        keys[key] = action;
+    };
+
+
+    // KEYS ********************
+
+    document.onkeydown = function (e) {
+        let action = keys[e.key];
+        if(action) keysStatus[action] = true;
+    }
+
+    document.onkeyup = function (e) {
+        let action = keys[e.key];
+        if(action) keysStatus[action] = false;
+    }
+
+    // TICKS ***************************
+
+    engine.onUpdate(function () {
+
+        if(keysStatus[inputActions.Up]) {
+            myTank.spriteState(1, 'up');
+        } else if(keysStatus[inputActions.Down]) {
+            myTank.spriteState(1, 'down');
+        } else if(keysStatus[inputActions.Left]) {
+            myTank.spriteState(1, 'left');
+        } else if (keysStatus[inputActions.Rigth]) {
+            myTank.spriteState(1, 'right');
+        }
+
+    });
 
 };
