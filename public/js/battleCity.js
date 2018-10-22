@@ -5,6 +5,9 @@ let BattleCity = function (canvas) {
     let engine = new Engine2d(30);
     let map = [];
 
+    // actors
+    let player = null;
+
     // INIT
     engine.initScene(canvas, 480, 480);
     engine.setBitmaps('tanks', './assets/bc_0.png');
@@ -33,10 +36,8 @@ let BattleCity = function (canvas) {
     };
 
     let reset = function () {
-
+        player = new self.Tank();
     };
-
-    let myTank =
 
     engine.load(function () {
 
@@ -46,11 +47,6 @@ let BattleCity = function (canvas) {
         //     .addSprite(1, 'eagle', [[0, 0]])
         //     .spriteState(1, 'die');
         //
-
-        myTank = new engine
-            .Container(160, 416, 32, 32)
-            .addSprite(1, 'tank_1', 0, 0)
-            .spriteState(1, 'top', false);
 
         reset();
     });
@@ -82,41 +78,39 @@ let BattleCity = function (canvas) {
                     new engine
                         .Container(x, y, 0, 0)
                         .addSprite(1, 'iron', 0, 0);
-                };
+                }
 
                 if(index === 3) {
                     new engine
                         .Container(x, y, 0, 0)
                         .addSprite(1, 'grass', 0, 0);
-                };
+                }
 
                 if(index === 4) {
                     new engine
                         .Container(x, y, 0, 0)
                         .addSprite(1, 'ice', 0, 0);
-                };
+                }
 
                 if(index === 5) {
                     new engine
                         .Container(x, y, 32, 32)
                         .addSprite(1, 'water', 0, 0)
                         .spriteState(1, 'idle');
-                };
+                }
 
                 if(index === 6) {
                     new engine
                         .Container(x, y, 0, 0)
                         .addSprite(1, 'eagle', 0, 0)
                         .spriteState(1, 'live');
-                };
-
-
+                }
 
             });
 
         })
 
-    }
+    };
 
 
     // METHODS *********************************************
@@ -125,10 +119,6 @@ let BattleCity = function (canvas) {
         loadMap(url, function () {
             prepareMapObjects()
         });
-    }
-
-    this.setAction = function (key, action) {
-        keys[key] = action;
     };
 
 
@@ -147,7 +137,7 @@ let BattleCity = function (canvas) {
                 if(!statuses[com]) pressedCallback(com);
                 statuses[com] = true;
             }
-        }
+        };
 
         document.onkeyup = function (e) {
             let com = actions[e.key];
@@ -170,52 +160,102 @@ let BattleCity = function (canvas) {
         this.onReleased = function (callback) {
             releasedCallback = callback;
         }
-    }
+    };
 
     let input = new this.Input();
     this.inputAssign = input.assign;
-
-    // TICKS ***************************
 
 
     input.onPressed(function (command) {
 
         if(command === 'up') {
-            myTank.spriteState(1, 'up', true);
+            player.moveUp();
         }
         if(command === 'down') {
-            myTank.spriteState(1, 'down', true);
+            player.moveDown();
         }
         if(command === 'left') {
-            myTank.spriteState(1, 'left', true);
+            player.moveLeft();
         }
         if(command === 'right') {
-            myTank.spriteState(1, 'right', true);
+            player.moveRight();
+        }
+        if(command === 'fire') {
+            player.fire();
         }
 
     });
     input.onReleased(function (command) {
 
         if(command === 'up') {
-            myTank.spriteState(1, 'up', false);
+            player.stop();
         }
         if(command === 'down') {
-            myTank.spriteState(1, 'down', false);
+            player.stop();
         }
         if(command === 'left') {
-            myTank.spriteState(1, 'left', false);
+            player.stop();
         }
         if(command === 'right') {
-            myTank.spriteState(1, 'right', false);
+            player.stop();
         }
 
     });
 
+    // TANKS
 
+    this.Tank = function(){
+
+        let x = 160;
+        let y = 416;
+        let speed = 2.0;
+        let direction = 0;
+
+        let container = new engine
+            .Container(x, y, 32, 32)
+            .addSprite(1, 'tank_1', 0, 0)
+            .spriteState(1, 'top', false);
+
+        this.moveUp = function () {
+            container.spriteState(1, 'up', true);
+            direction = 1;
+        };
+        this.moveDown = function () {
+            container.spriteState(1, 'down', true);
+            direction = 2;
+        };
+        this.moveLeft = function () {
+            container.spriteState(1, 'left', true);
+            direction = 3;
+        };
+        this.moveRight = function () {
+            container.spriteState(1, 'right', true);
+            direction = 4;
+        };
+        this.stop = function () {
+            container.spriteAnimation(1, false);
+            direction = 0;
+        };
+        this.fire = function () {
+
+        };
+        this.update = function () {
+            if(direction === 1) y -= speed;
+            if(direction === 2) y += speed;
+            if(direction === 3) x -= speed;
+            if(direction === 4) x += speed;
+            container.setPosition(x, y);
+        }
+
+
+    };
+
+
+    // TICKS ***************************
 
     engine.onUpdate(function () {
 
-
+        player.update();
 
     });
 

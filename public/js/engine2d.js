@@ -135,6 +135,10 @@ let Engine2d = function(fps) {
             this.scale = scale;
             return this;
         }
+        this.doAnimation = function (isRepeat) {
+            this.isRepeated = isRepeat;
+            return this;
+        }
         let states = {};
         params.states && params.states.forEach(function (state) {
             states[state.name] = state.frames;
@@ -167,8 +171,8 @@ let Engine2d = function(fps) {
         }
 
         this.setPosition = function (x, y) {
-            this.x = x;
-            this.y = y;
+            this.x = Math.round(x);
+            this.y = Math.round(y);
             return this;
         }
 
@@ -203,6 +207,11 @@ let Engine2d = function(fps) {
         this.spriteState = function(id, state, isRepeate){
             if(this.sprites[id])
                 this.sprites[id].setState(state, isRepeate);
+            return this;
+        }
+        this.spriteAnimation = function(id, isRepeate){
+            if(this.sprites[id])
+                this.sprites[id].doAnimation(isRepeate);
             return this;
         }
 
