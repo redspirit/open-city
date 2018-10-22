@@ -1,9 +1,47 @@
 [
   {
-    "id": "wall",
+    "id": "iron",
     "bitmap": "blocks",
     "rects": [
-      [1, 16, 0, 8, 8]
+      [16, 0, 8, 8]
+    ],
+    "scale": 2
+  },
+  {
+    "id": "grass",
+    "bitmap": "blocks",
+    "rects": [
+      [24, 0, 8, 8]
+    ],
+    "scale": 2
+  },
+  {
+    "id": "ice",
+    "bitmap": "blocks",
+    "rects": [
+      [32, 0, 8, 8]
+    ],
+    "scale": 2
+  },
+  {
+    "id": "bricks",
+    "bitmap": "blocks",
+    "rects": [
+      [42, 2, 4, 4],
+      [42, 10, 4, 4]
+    ],
+    "scale": 2
+  },
+  {
+    "id": "eagle",
+    "bitmap": "tanks",
+    "rects": [
+      [0, 256, 16, 16],
+      [16, 256, 16, 16]
+    ],
+    "states": [
+      {"name": "live", "frames": [[0, 0]]},
+      {"name": "die", "frames": [[1, 0]]}
     ],
     "scale": 2
   },
@@ -11,17 +49,11 @@
     "id": "water",
     "bitmap": "blocks",
     "rects": [
-      [1, 24, 8, 8, 8],
-      [2, 32, 8, 8, 8]
+      [24, 8, 8, 8],
+      [32, 8, 8, 8]
     ],
     "states": [
-      {
-        "name": "idle",
-        "frames": [
-          [1, 18],
-          [2, 18]
-        ]
-      }
+      {"name": "idle", "frames": [[0, 18], [1, 18]]}
     ],
     "scale": 2
   }

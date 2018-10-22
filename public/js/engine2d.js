@@ -106,7 +106,6 @@ let Engine2d = function(fps) {
         this.img = bitmap.img;
         this.id = params.id;
         this.rects = params.rects;
-        this.indexedRects = {};
         this.scale = params.scale || 1;
         this.state = null;
         this.visible = true;
@@ -114,10 +113,6 @@ let Engine2d = function(fps) {
         this.isRepeatedState = false;
         this.animationCurrentFrame = 0;
         this.animationSkipFrames = 0;
-
-        params.rects.forEach(function (rect) {
-            self.indexedRects[rect[0]] = [rect[1], rect[2], rect[3], rect[4]];
-        });
 
         this.setVisible = function (visible) {
             this.visible = visible;
@@ -248,19 +243,19 @@ let Engine2d = function(fps) {
 
     let renderStaticSprite = function (sprite, container) {
 
-        let rect = sprite.rects[0];
-
         sprite.positions.forEach(function (pos) {
+            let rectIndex = pos[2] || 0;
+            let rect = sprite.rects[rectIndex];
             scene.ctx.drawImage(
                 sprite.img,
-                rect[1],     // source x
-                rect[2],     // source y
-                rect[3],     // sprite w
-                rect[4],     // sprite h
+                rect[0],     // source x
+                rect[1],     // source y
+                rect[2],     // sprite w
+                rect[3],     // sprite h
                 pos[0] + container.x,
                 pos[1] + container.y,
-                rect[3] * sprite.scale,
-                rect[4] * sprite.scale
+                rect[2] * sprite.scale,
+                rect[3] * sprite.scale
             );
         });
 
@@ -280,7 +275,7 @@ let Engine2d = function(fps) {
 
         sprite.animationSkipFrames++;
 
-        let rect = sprite.indexedRects[currentFrame[0]];
+        let rect = sprite.rects[currentFrame[0]];
 
         sprite.positions.forEach(function (pos) {
 
