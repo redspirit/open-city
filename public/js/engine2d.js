@@ -186,6 +186,7 @@ let Engine2d = function(fps) {
         }
         this.setOverflow = function (overflow) {
             this.overflow = overflow;
+            console.log(this);
             return this;
         }
         this.setCollisionGroup = function (group) {
@@ -237,11 +238,7 @@ let Engine2d = function(fps) {
                 if(!sprite.visible)
                     return false;
 
-                if(sprite.rects.length > 1 && sprite.state) {
-                    renderAnimatedSprite(sprite, container);
-                } else {
-                    renderStaticSprite(sprite, container);
-                }
+                renderSprite(sprite, container);
 
             });
 
@@ -251,30 +248,43 @@ let Engine2d = function(fps) {
 
     let renderStaticSprite = function (sprite, container) {
 
+
+
         sprite.positions.forEach(function (pos) {
             let rectIndex = pos[2] || 0;
             let rect = sprite.rects[rectIndex];
+
             scene.ctx.drawImage(
                 sprite.img,
                 rect[0],     // source x
                 rect[1],     // source y
-                rect[2],     // sprite w
-                rect[3],     // sprite h
+                min(rect[2], viewPortX),     // sprite w
+                min(rect[3], viewPortY),     // sprite h
                 pos[0] + container.x,
                 pos[1] + container.y,
-                rect[2] * sprite.scale,
-                rect[3] * sprite.scale
+                min(rect[2], viewPortX) * sprite.scale,
+                min(rect[3], viewPortY) * sprite.scale
             );
         });
 
     }
 
-    let renderAnimatedSprite = function (sprite, container) {
+    let renderSprite = function (sprite, container) {
 
-        let currentFrame = sprite.state[sprite.animationCurrentFrame];
-        let skipping = currentFrame[1];
+        let currentFrame = sprite.state && sprite.state[sprite.animationCurrentFrame];
 
-        if(sprite.isRepeated) {
+        let skipping = 0;
+        let rect = sprite.rects[0];
+
+        let viewPortX = Infinity;
+        let viewPortY = Infinity;
+
+        if(currentFrame) {
+            skipping = currentFrame[1];
+            rect = sprite.rects[currentFrame[0]];
+        }
+
+        if(sprite.isRepeated && currentFrame) {
             if(sprite.animationSkipFrames === skipping) {
                 sprite.animationSkipFrames = 0;
                 sprite.animationCurrentFrame++;
@@ -284,20 +294,28 @@ let Engine2d = function(fps) {
             sprite.animationSkipFrames++;
         }
 
-        let rect = sprite.rects[currentFrame[0]];
-
         sprite.positions.forEach(function (pos) {
+
+            if(!currentFrame) {
+                let rectIndex = pos[2] || 0;
+                rect = sprite.rects[rectIndex];
+            }
+
+            if(container.overflow) {
+                viewPortX = (container.width - pos[0]) / sprite.scale;
+                viewPortY = (container.height - pos[1]) / sprite.scale;
+            }
 
             scene.ctx.drawImage(
                 sprite.img,
                 rect[0],     // source x
                 rect[1],     // source y
-                rect[2],     // sprite w
-                rect[3],     // sprite h
+                min(rect[2], viewPortX),     // sprite w
+                min(rect[3], viewPortY),     // sprite h
                 pos[0] + container.x,
                 pos[1] + container.y,
-                rect[2] * sprite.scale,
-                rect[3] * sprite.scale
+                min(rect[2], viewPortX) * sprite.scale,
+                min(rect[3], viewPortY) * sprite.scale
             );
 
         });
@@ -333,6 +351,16 @@ let Engine2d = function(fps) {
         }
     }
     animate();
+
+    // UTILS **********************
+
+    let max = function (a, b) {
+        return a > b ? a : b;
+    };
+    let min = function (a, b) {
+        return a < b ? a : b;
+    };
+
 
     return this;
 };

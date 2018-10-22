@@ -67,7 +67,7 @@ let BattleCity = function (canvas) {
 
                 if(index === 1) {
                     new engine
-                        .Container(x, y, 0, 0)
+                        .Container(x, y, 16, 16)
                         .addSprite(1, 'bricks', [
                             [0,0,0], [8,0,1],
                             [0,8,1], [8,8,0]
@@ -76,32 +76,32 @@ let BattleCity = function (canvas) {
 
                 if(index === 2) {
                     new engine
-                        .Container(x, y, 0, 0)
+                        .Container(x, y, 16, 16)
                         .addSprite(1, 'iron', 0, 0);
                 }
 
                 if(index === 3) {
                     new engine
-                        .Container(x, y, 0, 0)
+                        .Container(x, y, 16, 16)
                         .addSprite(1, 'grass', 0, 0);
                 }
 
                 if(index === 4) {
                     new engine
-                        .Container(x, y, 0, 0)
+                        .Container(x, y, 16, 16)
                         .addSprite(1, 'ice', 0, 0);
                 }
 
                 if(index === 5) {
                     new engine
-                        .Container(x, y, 32, 32)
+                        .Container(x, y, 16, 16)
                         .addSprite(1, 'water', 0, 0)
                         .spriteState(1, 'idle');
                 }
 
                 if(index === 6) {
                     new engine
-                        .Container(x, y, 0, 0)
+                        .Container(x, y, 32, 32)
                         .addSprite(1, 'eagle', 0, 0)
                         .spriteState(1, 'live');
                 }
@@ -206,15 +206,18 @@ let BattleCity = function (canvas) {
 
     this.Tank = function(){
 
-        let x = 160;
-        let y = 416;
+        let x = 0;
+        let y = 0;
+        // let x = 160;
+        // let y = 416;
         let speed = 2.2;
         let direction = 0;
 
         let container = new engine
             .Container(x, y, 32, 32)
             .addSprite(1, 'tank_1', 0, 0)
-            .spriteState(1, 'top', false);
+            .spriteState(1, 'top', false)
+            .setOverflow(false);
 
         this.moveUp = function () {
             container.spriteState(1, 'up', true);
