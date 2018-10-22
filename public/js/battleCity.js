@@ -208,7 +208,7 @@ let BattleCity = function (canvas) {
 
         let x = 160;
         let y = 416;
-        let speed = 2.0;
+        let speed = 2.2;
         let direction = 0;
 
         let container = new engine
