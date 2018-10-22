@@ -110,7 +110,7 @@ let Engine2d = function(fps) {
         this.state = null;
         this.visible = true;
         this.positions = [];
-        this.isRepeatedState = false;
+        this.isRepeated = false;
         this.animationCurrentFrame = 0;
         this.animationSkipFrames = 0;
 
@@ -120,7 +120,7 @@ let Engine2d = function(fps) {
         }
         this.setState = function (name, isRepeat) {
             this.state = states[name];
-            this.isRepeatedState = isRepeat;
+            this.isRepeated = typeof isRepeat === 'undefined' ? true : isRepeat;
             return this;
         };
         this.setPosition = function (points ,y) { // points OR x, y
@@ -265,14 +265,15 @@ let Engine2d = function(fps) {
         let currentFrame = sprite.state[sprite.animationCurrentFrame];
         let skipping = currentFrame[1];
 
-        if(sprite.animationSkipFrames === skipping) {
-            sprite.animationSkipFrames = 0;
-            sprite.animationCurrentFrame++;
-            if(sprite.animationCurrentFrame === sprite.state.length)
-                sprite.animationCurrentFrame = 0;
+        if(sprite.isRepeated) {
+            if(sprite.animationSkipFrames === skipping) {
+                sprite.animationSkipFrames = 0;
+                sprite.animationCurrentFrame++;
+                if(sprite.animationCurrentFrame === sprite.state.length)
+                    sprite.animationCurrentFrame = 0;
+            }
+            sprite.animationSkipFrames++;
         }
-
-        sprite.animationSkipFrames++;
 
         let rect = sprite.rects[currentFrame[0]];
 

@@ -5,18 +5,6 @@ let BattleCity = function (canvas) {
     let engine = new Engine2d(30);
     let map = [];
 
-    let inputActions = {
-        Up:     1,
-        Down:   2,
-        Left:   3,
-        Rigth:  4,
-        Fire:   5,
-        Pause:  6,
-        Reset:  7
-    }
-    let keysStatus = {};
-    let keys = {};
-
     // INIT
     engine.initScene(canvas, 480, 480);
     engine.setBitmaps('tanks', './assets/bc_0.png');
@@ -25,7 +13,6 @@ let BattleCity = function (canvas) {
 
     this.onReady = engine.load;
     this.onUpdate = engine.onUpdate;
-    this.inputActions = inputActions;
 
     let loadMap = function (mapUrl, callback) {
         map = [];
@@ -46,13 +33,7 @@ let BattleCity = function (canvas) {
     };
 
     let reset = function () {
-        keysStatus[inputActions.Up] = false;
-        keysStatus[inputActions.Down] = false;
-        keysStatus[inputActions.Left] = false;
-        keysStatus[inputActions.Rigth] = false;
-        keysStatus[inputActions.Fire] = false;
-        keysStatus[inputActions.Pause] = false;
-        keysStatus[inputActions.Reset] = false;
+
     };
 
     let myTank =
@@ -69,7 +50,7 @@ let BattleCity = function (canvas) {
         myTank = new engine
             .Container(160, 416, 32, 32)
             .addSprite(1, 'tank_1', 0, 0)
-            .spriteState(1, 'right');
+            .spriteState(1, 'top', false);
 
         reset();
     });
@@ -153,29 +134,88 @@ let BattleCity = function (canvas) {
 
     // KEYS ********************
 
-    document.onkeydown = function (e) {
-        let action = keys[e.key];
-        if(action) keysStatus[action] = true;
+    this.Input = function () {
+
+        let statuses = {};
+        let actions = {};
+        let pressedCallback = function () {};
+        let releasedCallback = function () {};
+
+        document.onkeydown = function (e) {
+            let com = actions[e.key];
+            if(com) {
+                if(!statuses[com]) pressedCallback(com);
+                statuses[com] = true;
+            }
+        }
+
+        document.onkeyup = function (e) {
+            let com = actions[e.key];
+            if(com) {
+                statuses[com] = false;
+                releasedCallback(com);
+            }
+        };
+
+        this.assign = function (buttonKey, command) {
+            actions[buttonKey] = command;
+            statuses[command] = false;
+        }
+        this.isPressed = function (command) {
+            return statuses[command];
+        }
+        this.onPressed = function (callback) {
+            pressedCallback = callback;
+        }
+        this.onReleased = function (callback) {
+            releasedCallback = callback;
+        }
     }
 
-    document.onkeyup = function (e) {
-        let action = keys[e.key];
-        if(action) keysStatus[action] = false;
-    }
+    let input = new this.Input();
+    this.inputAssign = input.assign;
 
     // TICKS ***************************
 
+
+    input.onPressed(function (command) {
+
+        if(command === 'up') {
+            myTank.spriteState(1, 'up', true);
+        }
+        if(command === 'down') {
+            myTank.spriteState(1, 'down', true);
+        }
+        if(command === 'left') {
+            myTank.spriteState(1, 'left', true);
+        }
+        if(command === 'right') {
+            myTank.spriteState(1, 'right', true);
+        }
+
+    });
+    input.onReleased(function (command) {
+
+        if(command === 'up') {
+            myTank.spriteState(1, 'up', false);
+        }
+        if(command === 'down') {
+            myTank.spriteState(1, 'down', false);
+        }
+        if(command === 'left') {
+            myTank.spriteState(1, 'left', false);
+        }
+        if(command === 'right') {
+            myTank.spriteState(1, 'right', false);
+        }
+
+    });
+
+
+
     engine.onUpdate(function () {
 
-        if(keysStatus[inputActions.Up]) {
-            myTank.spriteState(1, 'up');
-        } else if(keysStatus[inputActions.Down]) {
-            myTank.spriteState(1, 'down');
-        } else if(keysStatus[inputActions.Left]) {
-            myTank.spriteState(1, 'left');
-        } else if (keysStatus[inputActions.Rigth]) {
-            myTank.spriteState(1, 'right');
-        }
+
 
     });
 
