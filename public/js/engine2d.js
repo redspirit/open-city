@@ -9,7 +9,7 @@ let Engine2d = function(fps) {
 
     let bitmaps = [];
     let configUrl = '';
-    let config = {};
+    let config = [];
     let containers = [];
     let scene = {
         width: 0,
@@ -153,6 +153,7 @@ let Engine2d = function(fps) {
         this.width = width;
         this.height = height;
         this.visible = true;
+        this.color = '';
         this.sprites = {};
         this.overflow = false;    // скрыть ли все спрайты за пределом контейнера (w, h)
         this.collisionGroup = null;
@@ -162,6 +163,10 @@ let Engine2d = function(fps) {
             let sprite = new self.Sprite(spriteName);
             sprite.setPosition(position, y);
             this.sprites[id] = sprite;
+            return this;
+        }
+        this.fillColor = function (color) {
+            this.color = color;
             return this;
         }
         this.setVisible = function (visible) {
@@ -282,8 +287,12 @@ let Engine2d = function(fps) {
 
         containers.forEach(function (container) {
 
-            let sprites = container.getSprites();
+            if(container.color) {
+                scene.ctx.fillStyle = container.color;
+                scene.ctx.fillRect(container.x, container.y, container.width, container.height);
+            }
 
+            let sprites = container.getSprites();
             Object.keys(sprites).forEach(function (spriteId) {
 
                 let sprite = sprites[spriteId];

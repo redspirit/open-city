@@ -4,6 +4,7 @@ let BattleCity = function (canvas) {
 
     let engine = new Engine2d(30);
     let map = [];
+    let mapUrl = '';
 
     // actors
     let player = null;
@@ -18,6 +19,8 @@ let BattleCity = function (canvas) {
     this.onUpdate = engine.onUpdate;
 
     let loadMap = function (mapUrl, callback) {
+        if(!mapUrl)
+            return console.error('Map URL not defined!');
         map = [];
         let self = this;
         let oReq = new XMLHttpRequest();
@@ -37,6 +40,12 @@ let BattleCity = function (canvas) {
 
     let reset = function () {
         player = new self.Tank();
+
+        new engine.Container(0, 0, 480, 32).fillColor('gray').setCollisionGroup('wall');
+        new engine.Container(0, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
+        new engine.Container(448, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
+        new engine.Container(0, 448, 480, 32).fillColor('gray').setCollisionGroup('wall');
+
     };
 
     engine.load(function () {
@@ -47,6 +56,10 @@ let BattleCity = function (canvas) {
         //     .addSprite(1, 'eagle', [[0, 0]])
         //     .spriteState(1, 'die');
         //
+
+        loadMap(mapUrl, function () {
+            prepareMapObjects()
+        });
 
         reset();
     });
@@ -120,9 +133,7 @@ let BattleCity = function (canvas) {
     // METHODS *********************************************
 
     this.setMap = function (url) {
-        loadMap(url, function () {
-            prepareMapObjects()
-        });
+        mapUrl = url;
     };
 
 
