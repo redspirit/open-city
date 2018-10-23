@@ -78,5 +78,51 @@
       {"name": "right", "frames": [[6, 2], [7, 2]]}
     ],
     "scale": 2
+  },
+
+
+  {
+    "id": "explode_1",
+    "bitmap": "tanks",
+    "rects": [
+      [176, 256, 16, 16],
+      [160, 272, 16, 16],
+      [176, 272, 16, 16]
+    ],
+    "states": [
+      {"name": "explode", "frames": [[0, 8], [1, 8], [2, 8]]}
+    ],
+    "scale": 2
+  },
+  {
+    "id": "explode_2",
+    "bitmap": "tanks",
+    "rects": [
+      [192, 256, 32, 32],
+      [224, 256, 32, 32]
+    ],
+    "states": [
+      {"name": "explode", "frames": [[0, 10], [1, 10]]}
+    ],
+    "scale": 2
+  },
+
+  {
+    "id": "bullet",
+    "bitmap": "blocks",
+    "rects": [
+      [2, 2, 4, 4],
+      [10, 2, 4, 4],
+      [2, 10, 4, 4],
+      [10, 10, 4, 4]
+    ],
+    "states": [
+      {"name": "up", "frames": [[0, 0]]},
+      {"name": "left", "frames": [[1, 0]]},
+      {"name": "down", "frames": [[2, 0]]},
+      {"name": "right", "frames": [[3, 0]]}
+    ],
+    "scale": 2
   }
+
 ]

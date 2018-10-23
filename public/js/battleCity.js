@@ -8,6 +8,7 @@ let BattleCity = function (canvas) {
 
     // actors
     let player = null;
+    let myBullet = null;
 
     // INIT
     engine.initScene(canvas, 480, 480);
@@ -40,6 +41,7 @@ let BattleCity = function (canvas) {
 
     let reset = function () {
         player = new self.Tank();
+        myBullet = new self.Bullet();
 
         new engine.Container(0, 0, 480, 32).fillColor('gray').setCollisionGroup('wall');
         new engine.Container(0, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
@@ -113,7 +115,8 @@ let BattleCity = function (canvas) {
                         .Container(x, y, 16, 16)
                         .addSprite(1, 'water', 0, 0)
                         .spriteState(1, 'idle')
-                        .setCollisionGroup('block');
+                        .setCollisionGroup('block')
+                        .setName('water');
                 }
 
                 if(index === 6) {
@@ -193,7 +196,7 @@ let BattleCity = function (canvas) {
 
     });
 
-    // TANKS
+    // ACTORS
 
     this.Tank = function(){
 
@@ -201,6 +204,7 @@ let BattleCity = function (canvas) {
         let y = 416;
         let speed = 2;
         let direction = 0;
+        let lastDirection = 0;
         let roundPixels = 8;
 
         let container = new engine
@@ -211,7 +215,17 @@ let BattleCity = function (canvas) {
             .setZIndex(10);
 
         this.fire = function () {
-            console.log('FIRE');
+
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if(lastDirection === 1) { offsetX = 12; offsetY = 0; }
+            if(lastDirection === 2) { offsetX = 12; offsetY = 24; }
+            if(lastDirection === 3) { offsetX = 0; offsetY = 12; }
+            if(lastDirection === 4) { offsetX = 24; offsetY = 12; }
+
+            myBullet.start(x + offsetX, y + offsetY, lastDirection);
+
         };
         this.update = function () {
 
@@ -221,15 +235,19 @@ let BattleCity = function (canvas) {
             if(input.isPressed('up')) {
                 container.spriteState(1, 'up', true);
                 direction = 1;
+                lastDirection = 1;
             } else if(input.isPressed('down')) {
                 container.spriteState(1, 'down', true);
                 direction = 2;
+                lastDirection = 2;
             } else if(input.isPressed('left')) {
                 container.spriteState(1, 'left', true);
                 direction = 3;
+                lastDirection = 3;
             } else if(input.isPressed('right')) {
                 container.spriteState(1, 'right', true);
                 direction = 4;
+                lastDirection = 4;
             } else {
                 container.spriteAnimation(1, false);
                 direction = 0;
@@ -280,12 +298,88 @@ let BattleCity = function (canvas) {
 
     };
 
+    this.Bullet = function(){
+        let x = 0;
+        let y = 0;
+        let speed = 8;
+        let direction = 0;
+        let flying = false;
+
+        let container = new engine
+            .Container(x, y, 8, 8)
+            .addSprite(1, 'bullet', 0, 0)
+            .addSprite(2, 'explode_1', -12, -12)
+            .setCollisionGroup('player1')
+            .setZIndex(10)
+            .setVisible(false)
+            .spriteVisible(2, false)
+            .spriteState(2, 'explode', true);
+
+        this.start = function (_x, _y, _dir) {
+
+            if(flying)
+                return false;
+
+            direction = _dir;
+            x = _x;
+            y = _y;
+
+            if(direction === 1) container.spriteState(1, 'up', false);
+            if(direction === 2) container.spriteState(1, 'down', false);
+            if(direction === 3) container.spriteState(1, 'left', false);
+            if(direction === 4) container.spriteState(1, 'right', false);
+
+            flying = true;
+            container
+                .spriteVisible(1, true)
+                .spriteVisible(2, false)
+                .setPosition(x, y)
+                .setVisible(true);
+            return this;
+        };
+
+        this.setSpeed = function (val) {
+            speed = val;
+            return this;
+        };
+
+        this.update = function () {
+
+            if(!flying)
+                return false;
+
+            if(direction === 1) y -= speed;
+            if(direction === 2) y += speed;
+            if(direction === 3) x -= speed;
+            if(direction === 4) x += speed;
+
+            container.setPosition(x, y);
+
+            let collisions = container.findCollidedContainers([], ['water']);
+
+            if(collisions.length > 0) {
+
+                console.log(collisions);
+
+                flying = false;
+
+                container.spriteVisible(1, false);
+                container.spriteVisible(2, true);
+
+                //container.setVisible(false);
+
+            }
+
+        }
+
+    };
 
     // TICKS ***************************
 
     engine.onUpdate(function () {
 
         player.update();
+        myBullet.update();
 
     });
 

@@ -158,6 +158,7 @@ let Engine2d = function(fps) {
 
         this.x = x;
         this.y = y;
+        this.name = '';
         this.width = width;
         this.height = height;
         this.visible = true;
@@ -167,6 +168,10 @@ let Engine2d = function(fps) {
         this.collisionGroup = null;
         this.zIndex = 0;
 
+        this.setName = function (name) {
+            this.name = name;
+            return this;
+        }
         this.addSprite = function (id, spriteName, position, y) {
             let sprite = new self.Sprite(spriteName);
             sprite.setPosition(position, y);
@@ -236,11 +241,14 @@ let Engine2d = function(fps) {
                 this.y < cont.y + cont.height &&
                 this.height + this.y > cont.y;
         }
-        this.findCollidedContainers = function () {
+        this.findCollidedContainers = function (exludeGroups, exludeNames) {
             let me = this;
             let finded = [];
+            let groups = exludeGroups || [];
+            let names = exludeNames || [];
             containers.forEach(function (c) {
                 if(!c.collisionGroup) return false;
+                if(groups.indexOf(c.collisionGroup) > -1 || names.indexOf(c.name) > -1) return false;
                 if(me.collisionGroup !== c.collisionGroup && me.hasCollided(c)) {
                     finded.push(c);
                 }
@@ -300,6 +308,9 @@ let Engine2d = function(fps) {
         scene.ctx.clearRect(0, 0, scene.width, scene.height);
 
         containers.forEach(function (container) {
+
+            if(!container.visible)
+                return false;
 
             if(container.color) {
                 scene.ctx.fillStyle = container.color;
