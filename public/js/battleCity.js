@@ -135,32 +135,32 @@ let BattleCity = function (canvas) {
         let pressedCallback = function () {};
         let releasedCallback = function () {};
 
-        document.onkeydown = function (e) {
-            let com = actions[e.key];
+        document.addEventListener('keydown', function (e) {
+            let com = actions[e.keyCode];
             if(com) {
                 if(!statuses[com]) pressedCallback(com);
                 statuses[com] = true;
             }
-        };
+        }, false);
 
-        document.onkeyup = function (e) {
-            let com = actions[e.key];
+        document.addEventListener('keyup', function (e) {
+            let com = actions[e.keyCode];
             if(com) {
                 statuses[com] = false;
                 releasedCallback(com);
             }
-        };
+        }, false);
 
         this.assign = function (buttonKey, command) {
             actions[buttonKey] = command;
             statuses[command] = false;
-        }
+        };
         this.isPressed = function (command) {
             return statuses[command];
-        }
+        };
         this.onPressed = function (callback) {
             pressedCallback = callback;
-        }
+        };
         this.onReleased = function (callback) {
             releasedCallback = callback;
         }
@@ -172,37 +172,12 @@ let BattleCity = function (canvas) {
 
     input.onPressed(function (command) {
 
-        if(command === 'up') {
-            player.moveUp();
-        }
-        if(command === 'down') {
-            player.moveDown();
-        }
-        if(command === 'left') {
-            player.moveLeft();
-        }
-        if(command === 'right') {
-            player.moveRight();
-        }
         if(command === 'fire') {
             player.fire();
         }
 
     });
     input.onReleased(function (command) {
-
-        if(command === 'up') {
-            player.stop();
-        }
-        if(command === 'down') {
-            player.stop();
-        }
-        if(command === 'left') {
-            player.stop();
-        }
-        if(command === 'right') {
-            player.stop();
-        }
 
     });
 
@@ -222,33 +197,31 @@ let BattleCity = function (canvas) {
             .spriteState(1, 'top', false)
             .setCollisionGroup('player1');
 
-        this.moveUp = function () {
-            container.spriteState(1, 'up', true);
-            direction = 1;
-        };
-        this.moveDown = function () {
-            container.spriteState(1, 'down', true);
-            direction = 2;
-        };
-        this.moveLeft = function () {
-            container.spriteState(1, 'left', true);
-            direction = 3;
-        };
-        this.moveRight = function () {
-            container.spriteState(1, 'right', true);
-            direction = 4;
-        };
-        this.stop = function () {
-            container.spriteAnimation(1, false);
-            direction = 0;
-        };
         this.fire = function () {
-
+            console.log('FIRE');
         };
         this.update = function () {
 
             let oldX = x;
             let oldY = y;
+
+            if(input.isPressed('up')) {
+                container.spriteState(1, 'up', true);
+                direction = 1;
+            } else if(input.isPressed('down')) {
+                container.spriteState(1, 'down', true);
+                direction = 2;
+            } else if(input.isPressed('left')) {
+                container.spriteState(1, 'left', true);
+                direction = 3;
+            } else if(input.isPressed('right')) {
+                container.spriteState(1, 'right', true);
+                direction = 4;
+            } else {
+                container.spriteAnimation(1, false);
+                direction = 0;
+            }
+
 
             if(direction === 1) y -= speed;
             if(direction === 2) y += speed;
