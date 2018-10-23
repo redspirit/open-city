@@ -164,18 +164,15 @@ let Engine2d = function(fps) {
             this.sprites[id] = sprite;
             return this;
         }
-
         this.setVisible = function (visible) {
             this.visible = visible;
             return this;
         }
-
         this.setPosition = function (x, y) {
             this.x = Math.round(x);
             this.y = Math.round(y);
             return this;
         }
-
         this.setWidth = function (width) {
             this.width = width;
             return this;
@@ -215,7 +212,55 @@ let Engine2d = function(fps) {
                 this.sprites[id].doAnimation(isRepeate);
             return this;
         }
+        this.hasCollided = function (cont) {
+            return this.x < cont.x + cont.width &&
+                this.x + this.width > cont.x &&
+                this.y < cont.y + cont.height &&
+                this.height + this.y > cont.y;
+        }
+        this.findCollidedContainers = function () {
+            let me = this;
+            let finded = [];
+            containers.forEach(function (c) {
+                if(!c.collisionGroup) return false;
+                if(me.collisionGroup !== c.collisionGroup && me.hasCollided(c)) {
+                    finded.push(c);
+                }
+            });
+            return finded;
+        };
+        this.getCollisionDetails = function(){
 
+            const getIntersectingRectangle = (r1, r2) => {
+                [r1, r2] = [r1, r2].map(r => {
+                    return {x: [r.x1, r.x2].sort(), y: [r.y1, r.y2].sort()};
+                });
+
+                const noIntersect = r2.x[0] > r1.x[1] || r2.x[1] < r1.x[0] ||
+                    r2.y[0] > r1.y[1] || r2.y[1] < r1.y[0];
+
+                return noIntersect ? false : {
+                    x1: Math.max(r1.x[0], r2.x[0]), // _[0] is the lesser,
+                    y1: Math.max(r1.y[0], r2.y[0]), // _[1] is the greater
+                    x2: Math.min(r1.x[1], r2.x[1]),
+                    y2: Math.min(r1.y[1], r2.y[1])
+                };
+            };
+
+            /*  ↓  DEMO  ↓  */
+
+            const rectangle1 = { x1: 2, y1: 3, x2: 6, y2: 6 };
+            const rectangle2 = { x1: 5, y1: 5, x2: 7, y2: 10 };
+
+            console.log(getIntersectingRectangle(rectangle1, rectangle2));
+
+            return {
+                isCollided: true,
+                collidedRect: [1,2,3,4],
+                targetCorner: 1,
+                sorceCorner: 3
+            }
+        }
         containers.push(this);
 
     }
@@ -224,7 +269,6 @@ let Engine2d = function(fps) {
     // RENDER *********************************************************
 
     let render = function () {
-
 
         scene.ctx.clearRect(0, 0, scene.width, scene.height);
 
@@ -242,29 +286,6 @@ let Engine2d = function(fps) {
 
             });
 
-        });
-
-    }
-
-    let renderStaticSprite = function (sprite, container) {
-
-
-
-        sprite.positions.forEach(function (pos) {
-            let rectIndex = pos[2] || 0;
-            let rect = sprite.rects[rectIndex];
-
-            scene.ctx.drawImage(
-                sprite.img,
-                rect[0],     // source x
-                rect[1],     // source y
-                min(rect[2], viewPortX),     // sprite w
-                min(rect[3], viewPortY),     // sprite h
-                pos[0] + container.x,
-                pos[1] + container.y,
-                min(rect[2], viewPortX) * sprite.scale,
-                min(rect[3], viewPortY) * sprite.scale
-            );
         });
 
     }

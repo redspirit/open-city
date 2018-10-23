@@ -71,13 +71,15 @@ let BattleCity = function (canvas) {
                         .addSprite(1, 'bricks', [
                             [0,0,0], [8,0,1],
                             [0,8,1], [8,8,0]
-                        ]);
+                        ])
+                        .setCollisionGroup('block');
                 }
 
                 if(index === 2) {
                     new engine
                         .Container(x, y, 16, 16)
-                        .addSprite(1, 'iron', 0, 0);
+                        .addSprite(1, 'iron', 0, 0)
+                        .setCollisionGroup('block');
                 }
 
                 if(index === 3) {
@@ -96,14 +98,16 @@ let BattleCity = function (canvas) {
                     new engine
                         .Container(x, y, 16, 16)
                         .addSprite(1, 'water', 0, 0)
-                        .spriteState(1, 'idle');
+                        .spriteState(1, 'idle')
+                        .setCollisionGroup('block');
                 }
 
                 if(index === 6) {
                     new engine
                         .Container(x, y, 32, 32)
                         .addSprite(1, 'eagle', 0, 0)
-                        .spriteState(1, 'live');
+                        .spriteState(1, 'live')
+                        .setCollisionGroup('block');
                 }
 
             });
@@ -206,18 +210,16 @@ let BattleCity = function (canvas) {
 
     this.Tank = function(){
 
-        let x = 0;
-        let y = 0;
-        // let x = 160;
-        // let y = 416;
-        let speed = 2.2;
+        let x = 160;
+        let y = 416;
+        let speed = 2;
         let direction = 0;
 
         let container = new engine
             .Container(x, y, 32, 32)
             .addSprite(1, 'tank_1', 0, 0)
             .spriteState(1, 'top', false)
-            .setOverflow(false);
+            .setCollisionGroup('player1');
 
         this.moveUp = function () {
             container.spriteState(1, 'up', true);
@@ -243,11 +245,25 @@ let BattleCity = function (canvas) {
 
         };
         this.update = function () {
+
+            let oldX = x;
+            let oldY = y;
+
             if(direction === 1) y -= speed;
             if(direction === 2) y += speed;
             if(direction === 3) x -= speed;
             if(direction === 4) x += speed;
             container.setPosition(x, y);
+
+            let collisions = container.findCollidedContainers();
+
+            if(collisions.length > 0) {
+                console.log(collisions.length);
+                x = oldX;
+                y = oldY;
+                container.setPosition(x, y);
+            }
+
         }
 
 
