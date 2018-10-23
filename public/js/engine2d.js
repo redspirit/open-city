@@ -229,36 +229,44 @@ let Engine2d = function(fps) {
             });
             return finded;
         };
-        this.getCollisionDetails = function(){
+        this.getCollisionDetails = function(cont){
 
-            const getIntersectingRectangle = (r1, r2) => {
-                [r1, r2] = [r1, r2].map(r => {
-                    return {x: [r.x1, r.x2].sort(), y: [r.y1, r.y2].sort()};
-                });
+            if(!this.hasCollided(cont)) {
+                return {
+                    isCollided: false
+                }
+            }
 
-                const noIntersect = r2.x[0] > r1.x[1] || r2.x[1] < r1.x[0] ||
-                    r2.y[0] > r1.y[1] || r2.y[1] < r1.y[0];
+            let rect1 = [this.x, this.y, this.x + this.width, this.y + this.height];
+            let rect2 = [cont.x, cont.y, cont.x + cont.width, cont.y + cont.height];
 
-                return noIntersect ? false : {
-                    x1: Math.max(r1.x[0], r2.x[0]), // _[0] is the lesser,
-                    y1: Math.max(r1.y[0], r2.y[0]), // _[1] is the greater
-                    x2: Math.min(r1.x[1], r2.x[1]),
-                    y2: Math.min(r1.y[1], r2.y[1])
-                };
-            };
+            let box = [
+                Math.max(rect1[0], rect2[0]),
+                Math.max(rect1[1], rect2[1]),
+                Math.min(rect1[2], rect2[2]),
+                Math.min(rect1[3], rect2[3])
+            ];
+            let targetCorner = 0;
+            let sourceCorner = 0;
 
-            /*  ↓  DEMO  ↓  */
+            let rect = [box[0], box[1], box[2]-box[0], box[3]-box[1]];
 
-            const rectangle1 = { x1: 2, y1: 3, x2: 6, y2: 6 };
-            const rectangle2 = { x1: 5, y1: 5, x2: 7, y2: 10 };
+            if(box[0] === rect2[0] && box[1] === rect2[1]) targetCorner = 1;
+            if(box[2] === rect2[2] && box[1] === rect2[1]) targetCorner = 2;
+            if(box[2] === rect2[2] && box[3] === rect2[3]) targetCorner = 3;
+            if(box[0] === rect2[0] && box[3] === rect2[3]) targetCorner = 4;
 
-            console.log(getIntersectingRectangle(rectangle1, rectangle2));
+            if(rect1[0] === box[0] && rect1[1] === box[1]) sourceCorner = 1;
+            if(rect1[2] === box[2] && rect1[1] === box[1]) sourceCorner = 2;
+            if(rect1[2] === box[2] && rect1[3] === box[3]) sourceCorner = 3;
+            if(rect1[0] === box[0] && rect1[3] === box[3]) sourceCorner = 4;
 
             return {
                 isCollided: true,
-                collidedRect: [1,2,3,4],
-                targetCorner: 1,
-                sorceCorner: 3
+                collidedBox: box,
+                collidedRect: rect,
+                targetCorner: targetCorner,
+                sourceCorner: sourceCorner
             }
         }
         containers.push(this);
@@ -331,12 +339,12 @@ let Engine2d = function(fps) {
                 sprite.img,
                 rect[0],     // source x
                 rect[1],     // source y
-                min(rect[2], viewPortX),     // sprite w
-                min(rect[3], viewPortY),     // sprite h
+                Math.min(rect[2], viewPortX),     // sprite w
+                Math.min(rect[3], viewPortY),     // sprite h
                 pos[0] + container.x,
                 pos[1] + container.y,
-                min(rect[2], viewPortX) * sprite.scale,
-                min(rect[3], viewPortY) * sprite.scale
+                Math.min(rect[2], viewPortX) * sprite.scale,
+                Math.min(rect[3], viewPortY) * sprite.scale
             );
 
         });
@@ -374,13 +382,6 @@ let Engine2d = function(fps) {
     animate();
 
     // UTILS **********************
-
-    let max = function (a, b) {
-        return a > b ? a : b;
-    };
-    let min = function (a, b) {
-        return a < b ? a : b;
-    };
 
 
     return this;

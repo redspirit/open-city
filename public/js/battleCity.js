@@ -214,6 +214,7 @@ let BattleCity = function (canvas) {
         let y = 416;
         let speed = 2;
         let direction = 0;
+        let roundPixels = 8;
 
         let container = new engine
             .Container(x, y, 32, 32)
@@ -258,9 +259,33 @@ let BattleCity = function (canvas) {
             let collisions = container.findCollidedContainers();
 
             if(collisions.length > 0) {
-                console.log(collisions.length);
-                x = oldX;
-                y = oldY;
+                if(collisions.length === 1) {
+                    let details = container.getCollisionDetails(collisions[0]);
+
+                    x = oldX;
+                    y = oldY;
+
+                    if(details.targetCorner === 3) {
+                        if(direction === 1 && details.collidedRect[2] < roundPixels) x = details.collidedBox[2];
+                        if(direction === 3 && details.collidedRect[3] < roundPixels) y = details.collidedBox[3];
+                    }
+                    if(details.targetCorner === 4) {
+                        if(direction === 1 && details.collidedRect[2] < roundPixels) x = details.collidedBox[0] - container.width;
+                        if(direction === 4 && details.collidedRect[3] < roundPixels) y = details.collidedBox[3];
+                    }
+                    if(details.targetCorner === 2) {
+                        if(direction === 2 && details.collidedRect[2] < roundPixels) x = details.collidedBox[2];
+                        if(direction === 3 && details.collidedRect[3] < roundPixels) y = details.collidedBox[1] - container.height;
+                    }
+                    if(details.targetCorner === 1) {
+                        if(direction === 2 && details.collidedRect[2] < roundPixels) x = details.collidedBox[0] - container.width;
+                        if(direction === 4 && details.collidedRect[3] < roundPixels) y = details.collidedBox[1] - container.height;
+                    }
+
+                } else {
+                    x = oldX;
+                    y = oldY;
+                }
                 container.setPosition(x, y);
             }
 
