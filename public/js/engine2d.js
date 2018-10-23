@@ -92,6 +92,14 @@ let Engine2d = function(fps) {
         })[0];
     }
 
+    let sortContainersByIndex = function () {
+        containers = containers.sort(function (a, b) {
+            if (a.zIndex > b.zIndex) return 1;
+            if (a.zIndex < b.zIndex) return -1;
+            return 0;
+        });
+    }
+
     // CLASSES ********************************************************
 
     this.Sprite = function (id) {
@@ -157,7 +165,7 @@ let Engine2d = function(fps) {
         this.sprites = {};
         this.overflow = false;    // скрыть ли все спрайты за пределом контейнера (w, h)
         this.collisionGroup = null;
-
+        this.zIndex = 0;
 
         this.addSprite = function (id, spriteName, position, y) {
             let sprite = new self.Sprite(spriteName);
@@ -171,6 +179,11 @@ let Engine2d = function(fps) {
         }
         this.setVisible = function (visible) {
             this.visible = visible;
+            return this;
+        }
+        this.setZIndex = function (value) {
+            this.zIndex = value;
+            sortContainersByIndex();
             return this;
         }
         this.setPosition = function (x, y) {
@@ -275,6 +288,7 @@ let Engine2d = function(fps) {
             }
         }
         containers.push(this);
+        sortContainersByIndex();
 
     }
 

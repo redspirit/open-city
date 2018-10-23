@@ -98,7 +98,8 @@ let BattleCity = function (canvas) {
                 if(index === 3) {
                     new engine
                         .Container(x, y, 16, 16)
-                        .addSprite(1, 'grass', 0, 0);
+                        .addSprite(1, 'grass', 0, 0)
+                        .setZIndex(15);
                 }
 
                 if(index === 4) {
@@ -206,7 +207,8 @@ let BattleCity = function (canvas) {
             .Container(x, y, 32, 32)
             .addSprite(1, 'tank_1', 0, 0)
             .spriteState(1, 'top', false)
-            .setCollisionGroup('player1');
+            .setCollisionGroup('player1')
+            .setZIndex(10);
 
         this.fire = function () {
             console.log('FIRE');
