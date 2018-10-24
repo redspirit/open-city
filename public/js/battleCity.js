@@ -204,7 +204,6 @@ let BattleCity = function (canvas) {
         let y = 416;
         let speed = 2;
         let direction = 0;
-        let lastDirection = 0;
         let roundPixels = 8;
 
         let container = new engine
@@ -219,80 +218,81 @@ let BattleCity = function (canvas) {
             let offsetX = 0;
             let offsetY = 0;
 
-            if(lastDirection === 1) { offsetX = 12; offsetY = 0; }
-            if(lastDirection === 2) { offsetX = 12; offsetY = 24; }
-            if(lastDirection === 3) { offsetX = 0; offsetY = 12; }
-            if(lastDirection === 4) { offsetX = 24; offsetY = 12; }
+            if(direction === 1) { offsetX = 12; offsetY = 0; }
+            if(direction === 2) { offsetX = 12; offsetY = 24; }
+            if(direction === 3) { offsetX = 0; offsetY = 12; }
+            if(direction === 4) { offsetX = 24; offsetY = 12; }
 
-            myBullet.start(x + offsetX, y + offsetY, lastDirection);
+            myBullet.start(x + offsetX, y + offsetY, direction);
 
         };
         this.update = function () {
 
             let oldX = x;
             let oldY = y;
+            let dir;
+            let oldDirection = direction;
 
             if(input.isPressed('up')) {
                 container.spriteState(1, 'up', true);
+                dir = 1;
                 direction = 1;
-                lastDirection = 1;
             } else if(input.isPressed('down')) {
                 container.spriteState(1, 'down', true);
+                dir = 2;
                 direction = 2;
-                lastDirection = 2;
             } else if(input.isPressed('left')) {
                 container.spriteState(1, 'left', true);
+                dir = 3;
                 direction = 3;
-                lastDirection = 3;
             } else if(input.isPressed('right')) {
                 container.spriteState(1, 'right', true);
+                dir = 4;
                 direction = 4;
-                lastDirection = 4;
             } else {
                 container.spriteAnimation(1, false);
-                direction = 0;
+                dir = 0;
             }
 
+            if(dir === 1) y -= speed;
+            if(dir === 2) y += speed;
+            if(dir === 3) x -= speed;
+            if(dir === 4) x += speed;
 
-            if(direction === 1) y -= speed;
-            if(direction === 2) y += speed;
-            if(direction === 3) x -= speed;
-            if(direction === 4) x += speed;
+            if((oldDirection === 1 || oldDirection === 2) && (direction === 3 || direction === 4)) {
+                // to horizontal
+                let grid = getGrig();
+                let d1 = Math.abs(grid.yMin - y);
+                let d2 = Math.abs(grid.yMax - y);
+                y = d1 < d2 ? grid.yMin : grid.yMax;
+                oldY = y;
+            }
+            if((oldDirection === 3 || oldDirection === 4) && (direction === 1 || direction === 2)) {
+                // to vertical
+                let grid = getGrig();
+                let d1 = Math.abs(grid.xMin - x);
+                let d2 = Math.abs(grid.xMax - x);
+                x = d1 < d2 ? grid.xMin : grid.xMax;
+                oldX = x;
+            }
+
             container.setPosition(x, y);
 
             let collisions = container.findCollidedContainers();
-
             if(collisions.length > 0) {
-                if(collisions.length === 1) {
-                    let details = container.getCollisionDetails(collisions[0]);
-
-                    x = oldX;
-                    y = oldY;
-
-                    if(details.targetCorner === 3) {
-                        if(direction === 1 && details.collidedRect[2] < roundPixels) x = details.collidedBox[2];
-                        if(direction === 3 && details.collidedRect[3] < roundPixels) y = details.collidedBox[3];
-                    }
-                    if(details.targetCorner === 4) {
-                        if(direction === 1 && details.collidedRect[2] < roundPixels) x = details.collidedBox[0] - container.width;
-                        if(direction === 4 && details.collidedRect[3] < roundPixels) y = details.collidedBox[3];
-                    }
-                    if(details.targetCorner === 2) {
-                        if(direction === 2 && details.collidedRect[2] < roundPixels) x = details.collidedBox[2];
-                        if(direction === 3 && details.collidedRect[3] < roundPixels) y = details.collidedBox[1] - container.height;
-                    }
-                    if(details.targetCorner === 1) {
-                        if(direction === 2 && details.collidedRect[2] < roundPixels) x = details.collidedBox[0] - container.width;
-                        if(direction === 4 && details.collidedRect[3] < roundPixels) y = details.collidedBox[1] - container.height;
-                    }
-
-                } else {
-                    x = oldX;
-                    y = oldY;
-                }
+                x = oldX;
+                y = oldY;
                 container.setPosition(x, y);
             }
 
+        };
+        let getGrig = function () {
+            return {
+                xMin: Math.floor(x / 16) * 16,
+                xMax: Math.floor(x / 16) * 16 + 16,
+                yMin: Math.floor(y / 16) * 16,
+                yMax: Math.floor(y / 16) * 16 + 16
+            }
         }
 
 

@@ -3,7 +3,7 @@
 // sprite editor https://www.piskelapp.com
 let game = new BattleCity(document.getElementById('canvas'));
 
-game.setMap('./maps/test.txt');
+game.setMap('./maps/02.txt');
 
 // set buttons
 game.inputAssign(38, 'up');
