@@ -48,16 +48,31 @@ let BattleCity = function (canvas) {
         new engine.Container(448, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
         new engine.Container(0, 448, 480, 32).fillColor('gray').setCollisionGroup('wall');
 
+        new engine
+            .Container(10 * 16, 16 * 22 , 16, 16)
+            .addSprite(1, 'bricks', [
+               // [0,0,0], [8,0,1],
+                [0,8,1], [8,8,0]
+            ])
+            .setCollisionGroup('block')
+            .changeSize(0, 8, 16, 8);
+
+        new engine
+            .Container(13 * 16, 16 * 22 , 16, 16)
+            .addSprite(1, 'bricks', [
+                [0,0,0], [8,0,1],
+               // [0,8,1], [8,8,0]
+            ])
+            .setCollisionGroup('block')
+            .changeSize(0, 0, 16, 8);
+
     };
 
     engine.load(function () {
 
-        // new engine
-        //     .Container('eagle_container_2', 0, 0)
-        //     .setPosition(32, 128)
-        //     .addSprite(1, 'eagle', [[0, 0]])
-        //     .spriteState(1, 'die');
-        //
+
+
+
 
         loadMap(mapUrl, function () {
             prepareMapObjects()
@@ -212,7 +227,7 @@ let BattleCity = function (canvas) {
             .setCollisionGroup('player1')
             .setZIndex(10);
 
-        let getGrig = function () {
+        let getGrid = function () {
             return {
                 xMin: Math.floor(x / 16) * 16,
                 xMax: Math.floor(x / 16) * 16 + 16,
@@ -239,6 +254,8 @@ let BattleCity = function (canvas) {
 
             let oldX = x;
             let oldY = y;
+            let turnOldX = x;
+            let turnOldY = y;
             let dir;
             let oldDirection = direction;
 
@@ -270,15 +287,23 @@ let BattleCity = function (canvas) {
 
             if((oldDirection === 1 || oldDirection === 2) && (direction === 3 || direction === 4)) {
                 // to horizontal
-                let grid = getGrig();
+                let grid = getGrid();
                 let d1 = Math.abs(grid.yMin - y);
                 let d2 = Math.abs(grid.yMax - y);
-                y = d1 < d2 ? grid.yMin : grid.yMax;
+                if(d1 === d2) {
+
+                    // console.log('PIP!', grid.yMin - oldY);
+                    // console.log('PIP!', grid.yMax - oldY);
+                    console.log('PIP!', y - oldY);
+                    y = ((grid.yMin - oldY) > (grid.yMax - oldY)) ? grid.yMin : grid.yMax;
+                } else {
+                    y = d1 < d2 ? grid.yMin : grid.yMax;
+                }
                 oldY = y;
             }
             if((oldDirection === 3 || oldDirection === 4) && (direction === 1 || direction === 2)) {
                 // to vertical
-                let grid = getGrig();
+                let grid = getGrid();
                 let d1 = Math.abs(grid.xMin - x);
                 let d2 = Math.abs(grid.xMax - x);
                 x = d1 < d2 ? grid.xMin : grid.xMax;

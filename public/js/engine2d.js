@@ -222,7 +222,6 @@ let Engine2d = function(fps) {
         }
         this.setOverflow = function (overflow) {
             this.overflow = overflow;
-            console.log(this);
             return this;
         }
         this.setCollisionGroup = function (group) {
@@ -239,6 +238,11 @@ let Engine2d = function(fps) {
         this.spriteVisible = function(id, visible){
             if(this.sprites[id])
                 this.sprites[id].setVisible(visible);
+            return this;
+        };
+        this.spritePosition = function(id, positions, y){
+            if(this.sprites[id])
+                this.sprites[id].setPosition(positions, y)
             return this;
         }
         this.spriteState = function(id, state, animationType){
@@ -310,6 +314,28 @@ let Engine2d = function(fps) {
                 targetCorner: targetCorner,
                 sourceCorner: sourceCorner
             }
+        }
+        this.changeSize = function (x, y, w, h) {
+            // изменить размер контернера указав внутренний бокс
+
+            this.x += x;
+            this.y += y;
+            this.width = w;
+            this.height = h;
+
+            Object.keys(container.sprites).forEach(function (spriteId) {
+                let sprite = container.sprites[spriteId];
+
+                sprite.positions = sprite.positions.map(function (rect) {
+                    rect[0] = rect[0] - x;
+                    rect[1] = rect[1] - y;
+                    return rect;
+                });
+
+            });
+
+            return this;
+
         }
         containers.push(this);
         sortContainersByIndex();
