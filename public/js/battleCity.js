@@ -40,7 +40,7 @@ let BattleCity = function (canvas) {
     };
 
     let reset = function () {
-        player = new self.Tank();
+        player = new self.Tank(160, 416);
         myBullet = new self.Bullet();
 
         new engine.Container(0, 0, 480, 32).fillColor('gray').setCollisionGroup('wall');
@@ -198,29 +198,38 @@ let BattleCity = function (canvas) {
 
     // ACTORS
 
-    this.Tank = function(){
+    this.Tank = function(startX, startY){
 
-        let x = 160;
-        let y = 416;
+        let x = startX;
+        let y = startY;
         let speed = 2;
         let direction = 0;
-        let roundPixels = 8;
 
         let container = new engine
             .Container(x, y, 32, 32)
             .addSprite(1, 'tank_1', 0, 0)
-            .spriteState(1, 'top', false)
+            .spriteState(1, 'top', engine.AnimationType.STATIC)
             .setCollisionGroup('player1')
             .setZIndex(10);
+
+        let getGrig = function () {
+            return {
+                xMin: Math.floor(x / 16) * 16,
+                xMax: Math.floor(x / 16) * 16 + 16,
+                yMin: Math.floor(y / 16) * 16,
+                yMax: Math.floor(y / 16) * 16 + 16
+            }
+        }
 
         this.fire = function () {
 
             let offsetX = 0;
             let offsetY = 0;
 
+            // позиционируем пулю относительно танка
             if(direction === 1) { offsetX = 12; offsetY = 0; }
             if(direction === 2) { offsetX = 12; offsetY = 24; }
-            if(direction === 3) { offsetX = 0; offsetY = 12; }
+            if(direction === 3) { offsetX = 0;  offsetY = 12; }
             if(direction === 4) { offsetX = 24; offsetY = 12; }
 
             myBullet.start(x + offsetX, y + offsetY, direction);
@@ -234,23 +243,23 @@ let BattleCity = function (canvas) {
             let oldDirection = direction;
 
             if(input.isPressed('up')) {
-                container.spriteState(1, 'up', true);
+                container.spriteState(1, 'up', engine.AnimationType.ANIMATE_REPEAT);
                 dir = 1;
                 direction = 1;
             } else if(input.isPressed('down')) {
-                container.spriteState(1, 'down', true);
+                container.spriteState(1, 'down', engine.AnimationType.ANIMATE_REPEAT);
                 dir = 2;
                 direction = 2;
             } else if(input.isPressed('left')) {
-                container.spriteState(1, 'left', true);
+                container.spriteState(1, 'left', engine.AnimationType.ANIMATE_REPEAT);
                 dir = 3;
                 direction = 3;
             } else if(input.isPressed('right')) {
-                container.spriteState(1, 'right', true);
+                container.spriteState(1, 'right', engine.AnimationType.ANIMATE_REPEAT);
                 dir = 4;
                 direction = 4;
             } else {
-                container.spriteAnimation(1, false);
+                container.spriteAnimation(1, engine.AnimationType.STATIC);
                 dir = 0;
             }
 
@@ -286,15 +295,6 @@ let BattleCity = function (canvas) {
             }
 
         };
-        let getGrig = function () {
-            return {
-                xMin: Math.floor(x / 16) * 16,
-                xMax: Math.floor(x / 16) * 16 + 16,
-                yMin: Math.floor(y / 16) * 16,
-                yMax: Math.floor(y / 16) * 16 + 16
-            }
-        }
-
 
     };
 
@@ -310,10 +310,10 @@ let BattleCity = function (canvas) {
             .addSprite(1, 'bullet', 0, 0)
             .addSprite(2, 'explode_1', -12, -12)
             .setCollisionGroup('player1')
-            .setZIndex(10)
+            .setZIndex(11)
             .setVisible(false)
             .spriteVisible(2, false)
-            .spriteState(2, 'explode', true);
+            .spriteState(2, 'explode', engine.AnimationType.ANIMATE_TO_HIDE);
 
         this.start = function (_x, _y, _dir) {
 
@@ -324,10 +324,10 @@ let BattleCity = function (canvas) {
             x = _x;
             y = _y;
 
-            if(direction === 1) container.spriteState(1, 'up', false);
-            if(direction === 2) container.spriteState(1, 'down', false);
-            if(direction === 3) container.spriteState(1, 'left', false);
-            if(direction === 4) container.spriteState(1, 'right', false);
+            if(direction === 1) container.spriteState(1, 'up');
+            if(direction === 2) container.spriteState(1, 'down');
+            if(direction === 3) container.spriteState(1, 'left');
+            if(direction === 4) container.spriteState(1, 'right');
 
             flying = true;
             container
@@ -364,9 +364,8 @@ let BattleCity = function (canvas) {
                 flying = false;
 
                 container.spriteVisible(1, false);
-                container.spriteVisible(2, true);
-
-                //container.setVisible(false);
+                container.spriteVisible(2, true)
+                container.spriteState(2, 'explode', engine.AnimationType.ANIMATE_TO_HIDE);
 
             }
 

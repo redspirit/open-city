@@ -40,8 +40,8 @@
       [16, 256, 16, 16]
     ],
     "states": [
-      {"name": "live", "frames": [[0, 0]]},
-      {"name": "die", "frames": [[1, 0]]}
+      {"name": "live", "frames": [0]},
+      {"name": "die", "frames": [1]}
     ],
     "scale": 2
   },
@@ -53,7 +53,7 @@
       [32, 8, 8, 8]
     ],
     "states": [
-      {"name": "idle", "frames": [[0, 18], [1, 18]]}
+      {"name": "idle", "frames": [0, 1], "speed": 18}
     ],
     "scale": 2
   },
@@ -72,10 +72,10 @@
       [112, 0, 16, 16]
     ],
     "states": [
-      {"name": "up", "frames": [[0, 2], [1, 2]]},
-      {"name": "left", "frames": [[2, 2], [3, 2]]},
-      {"name": "down", "frames": [[4, 2], [5, 2]]},
-      {"name": "right", "frames": [[6, 2], [7, 2]]}
+      {"name": "up", "frames": [0, 1], "speed": 2},
+      {"name": "left", "frames": [2, 3], "speed": 2},
+      {"name": "down", "frames": [4, 5], "speed": 2},
+      {"name": "right", "frames": [6, 7], "speed": 2}
     ],
     "scale": 2
   },
@@ -90,7 +90,7 @@
       [176, 272, 16, 16]
     ],
     "states": [
-      {"name": "explode", "frames": [[0, 8], [1, 8], [2, 8]]}
+      {"name": "explode", "frames": [0, 1, 2], "speed": 2}
     ],
     "scale": 2
   },
@@ -102,7 +102,7 @@
       [224, 256, 32, 32]
     ],
     "states": [
-      {"name": "explode", "frames": [[0, 10], [1, 10]]}
+      {"name": "explode", "frames": [0, 1], "speed": 5}
     ],
     "scale": 2
   },
@@ -117,10 +117,10 @@
       [10, 10, 4, 4]
     ],
     "states": [
-      {"name": "up", "frames": [[0, 0]]},
-      {"name": "left", "frames": [[1, 0]]},
-      {"name": "down", "frames": [[2, 0]]},
-      {"name": "right", "frames": [[3, 0]]}
+      {"name": "up", "frames": [0]},
+      {"name": "left", "frames": [1]},
+      {"name": "down", "frames": [2]},
+      {"name": "right", "frames": [3]}
     ],
     "scale": 2
   }

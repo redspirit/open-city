@@ -2,7 +2,7 @@
 
 let Engine2d = function(fps) {
 
-    let self = this;
+    let engine = this;
 
     let resourcesLoaded = false;
     let scenePrepared = false;
@@ -15,6 +15,13 @@ let Engine2d = function(fps) {
         width: 0,
         height: 0,
         ctx: null
+    }
+
+    this.AnimationType = {
+        STATIC: 1,              // показывать только первый кадр
+        ANIMATE_REPEAT: 2,     // анимировать и циклить все кадры
+        ANIMATE_TO_END: 3,      // анимировать все кадры и остановить на последнем
+        ANIMATE_TO_HIDE: 4,     // анимировать все кадры и скрыть спрайт
     }
 
     this.setBitmaps = function(name, url) {
@@ -82,13 +89,13 @@ let Engine2d = function(fps) {
 
     let findBitmap = function (name) {
         return bitmaps.filter(function (bitmap) {
-           return bitmap.name == name;
+           return bitmap.name === name;
         })[0];
     }
 
     let findSpriteConfig = function (id) {
         return config.filter(function (item) {
-           return item.id == id;
+           return item.id === id;
         })[0];
     }
 
@@ -118,17 +125,25 @@ let Engine2d = function(fps) {
         this.state = null;
         this.visible = true;
         this.positions = [];
-        this.isRepeated = false;
+        this.animationType = engine.AnimationType.ANIMATE_REPEAT;
         this.animationCurrentFrame = 0;
         this.animationSkipFrames = 0;
+        this.noStates = true;
 
         this.setVisible = function (visible) {
             this.visible = visible;
             return this;
         }
-        this.setState = function (name, isRepeat) {
+        this.setState = function (name, animationType) {
+            if(this.noStates)
+                return this;
             this.state = states[name];
-            this.isRepeated = typeof isRepeat === 'undefined' ? true : isRepeat;
+            if(animationType)
+                this.animationType = animationType;
+            if(animationType === engine.AnimationType.ANIMATE_TO_HIDE || animationType === engine.AnimationType.ANIMATE_TO_END) {
+                this.animationCurrentFrame = 0;
+                this.animationSkipFrames = 0;
+            }
             return this;
         };
         this.setPosition = function (points ,y) { // points OR x, y
@@ -143,15 +158,16 @@ let Engine2d = function(fps) {
             this.scale = scale;
             return this;
         }
-        this.doAnimation = function (isRepeat) {
-            this.isRepeated = isRepeat;
+        this.doAnimation = function (animationType) {
+            this.animationType = animationType;
             return this;
         }
         let states = {};
         params.states && params.states.forEach(function (state) {
-            states[state.name] = state.frames;
+            states[state.name] = state;
+            self.noStates = false;
         });
-    }
+    };
 
     this.Container = function (x, y, width, height) {
         let container = this;
@@ -173,7 +189,7 @@ let Engine2d = function(fps) {
             return this;
         }
         this.addSprite = function (id, spriteName, position, y) {
-            let sprite = new self.Sprite(spriteName);
+            let sprite = new engine.Sprite(spriteName);
             sprite.setPosition(position, y);
             this.sprites[id] = sprite;
             return this;
@@ -225,14 +241,14 @@ let Engine2d = function(fps) {
                 this.sprites[id].setVisible(visible);
             return this;
         }
-        this.spriteState = function(id, state, isRepeate){
+        this.spriteState = function(id, state, animationType){
             if(this.sprites[id])
-                this.sprites[id].setState(state, isRepeate);
+                this.sprites[id].setState(state, animationType);
             return this;
         }
-        this.spriteAnimation = function(id, isRepeate){
+        this.spriteAnimation = function(id, animationType){
             if(this.sprites[id])
-                this.sprites[id].doAnimation(isRepeate);
+                this.sprites[id].doAnimation(animationType);
             return this;
         }
         this.hasCollided = function (cont) {
@@ -333,33 +349,65 @@ let Engine2d = function(fps) {
     }
 
     let renderSprite = function (sprite, container) {
-
-        let currentFrame = sprite.state && sprite.state[sprite.animationCurrentFrame];
-
-        let skipping = 0;
-        let rect = sprite.rects[0];
+        // state = {"name": "explode", "frames": [0, 1, 2], "speed": 3}
 
         let viewPortX = Infinity;
         let viewPortY = Infinity;
+        let skiping = sprite.state ? (sprite.state.speed || 0) : 0;
+        let rect = [];
 
-        if(currentFrame) {
-            skipping = currentFrame[1];
-            rect = sprite.rects[currentFrame[0]];
+        if(!sprite.state) sprite.animationType = engine.AnimationType.STATIC;
+
+        if(sprite.animationType === engine.AnimationType.STATIC) {
+            if(sprite.state) {
+                rect = sprite.rects[sprite.state.frames[sprite.animationCurrentFrame]];
+            } else {
+                rect = sprite.rects[0];
+            }
         }
+        if(sprite.animationType === engine.AnimationType.ANIMATE_REPEAT) {
 
-        if(sprite.isRepeated && currentFrame) {
-            if(sprite.animationSkipFrames === skipping) {
+            rect = sprite.rects[sprite.state.frames[sprite.animationCurrentFrame]];
+
+            if(sprite.animationSkipFrames === skiping) {
                 sprite.animationSkipFrames = 0;
                 sprite.animationCurrentFrame++;
-                if(sprite.animationCurrentFrame === sprite.state.length)
+                if(sprite.animationCurrentFrame === sprite.state.frames.length)
                     sprite.animationCurrentFrame = 0;
             }
             sprite.animationSkipFrames++;
+
+        }
+        if(sprite.animationType === engine.AnimationType.ANIMATE_TO_END) {
+
+            rect = sprite.rects[sprite.state.frames[sprite.animationCurrentFrame]];
+
+            if(sprite.animationSkipFrames === skiping) {
+                sprite.animationSkipFrames = 0;
+                sprite.animationCurrentFrame++;
+                if(sprite.animationCurrentFrame === sprite.state.frames.length)
+                    sprite.animationCurrentFrame = sprite.state.frames.length - 1;
+            }
+            sprite.animationSkipFrames++;
+
+        }
+        if(sprite.animationType === engine.AnimationType.ANIMATE_TO_HIDE) {
+
+            rect = sprite.rects[sprite.state.frames[sprite.animationCurrentFrame]];
+
+            if(sprite.animationSkipFrames === skiping) {
+                sprite.animationSkipFrames = 0;
+                sprite.animationCurrentFrame++;
+                if(sprite.animationCurrentFrame === sprite.state.frames.length)
+                    sprite.visible = false;
+            }
+            sprite.animationSkipFrames++;
+
         }
 
         sprite.positions.forEach(function (pos) {
 
-            if(!currentFrame) {
+            if(!sprite.state) {
                 let rectIndex = pos[2] || 0;
                 rect = sprite.rects[rectIndex];
             }
@@ -385,7 +433,6 @@ let Engine2d = function(fps) {
 
 
     }
-
 
     // INIT gengerator ************************************************
 
