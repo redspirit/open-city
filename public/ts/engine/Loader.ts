@@ -1,9 +1,9 @@
 
-export default class Loader {
+export class Loader {
 
     private configUrl:string = '';
     private loadedCallback:any;
-    private configData: any;
+    public configData: any;
 
     public load(url:string, callback:any):void {
         this.configUrl = url;
@@ -43,3 +43,5 @@ export default class Loader {
     }
 
 }
+
+export let loader:Loader = new Loader();

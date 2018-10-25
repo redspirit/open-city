@@ -1,6 +1,6 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var Loader;
+    var Loader, loader;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -44,7 +44,8 @@ System.register([], function (exports_1, context_1) {
                 };
                 return Loader;
             }());
-            exports_1("default", Loader);
+            exports_1("Loader", Loader);
+            exports_1("loader", loader = new Loader());
         }
     };
 });

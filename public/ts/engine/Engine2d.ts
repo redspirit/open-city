@@ -1,6 +1,19 @@
-import Loader from "./Loader";
+import {loader} from "./Loader";
 
-export default class Engine2d{
+export enum AnimationType { STATIC, ANIMATE_REPEAT, ANIMATE_TO_END, ANIMATE_TO_HIDE };
+
+export class State {
+    name:string;
+    frames: number[];
+    speed: number;
+    constructor(name:string = '', frames:number[] = [], speed:number = 0) {
+        this.name = name;
+        this.frames = frames;
+        this.speed = speed;
+    }
+}
+
+export class Engine2d{
 
     // FPS properties
     private fpsInterval: number;
@@ -13,7 +26,6 @@ export default class Engine2d{
     // resources properties
     private resourcesLoaded:boolean = false;
     private configData:any;
-    private loader:Loader = new Loader();
 
     // scene
     private sceneCtx:any = null;
@@ -39,7 +51,7 @@ export default class Engine2d{
             this.sceneWidth = width;
             this.sceneHeight = height;
 
-            this.loader.load(configUrl, (configData:any) => {
+            loader.load(configUrl, (configData:any) => {
                 this.configData = configData;
                 this.resourcesLoaded = true;
                 console.log('configData', configData);

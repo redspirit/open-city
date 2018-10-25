@@ -1,6 +1,6 @@
 System.register(["./Loader"], function (exports_1, context_1) {
     "use strict";
-    var Loader_1, Engine2d;
+    var Loader_1, AnimationType, State, Engine2d;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -9,11 +9,30 @@ System.register(["./Loader"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
+            (function (AnimationType) {
+                AnimationType[AnimationType["STATIC"] = 0] = "STATIC";
+                AnimationType[AnimationType["ANIMATE_REPEAT"] = 1] = "ANIMATE_REPEAT";
+                AnimationType[AnimationType["ANIMATE_TO_END"] = 2] = "ANIMATE_TO_END";
+                AnimationType[AnimationType["ANIMATE_TO_HIDE"] = 3] = "ANIMATE_TO_HIDE";
+            })(AnimationType || (AnimationType = {}));
+            exports_1("AnimationType", AnimationType);
+            ;
+            State = /** @class */ (function () {
+                function State(name, frames, speed) {
+                    if (name === void 0) { name = ''; }
+                    if (frames === void 0) { frames = []; }
+                    if (speed === void 0) { speed = 0; }
+                    this.name = name;
+                    this.frames = frames;
+                    this.speed = speed;
+                }
+                return State;
+            }());
+            exports_1("State", State);
             Engine2d = /** @class */ (function () {
                 function Engine2d(fps) {
                     // resources properties
                     this.resourcesLoaded = false;
-                    this.loader = new Loader_1.default();
                     // scene
                     this.sceneCtx = null;
                     this.sceneWidth = 0;
@@ -32,7 +51,7 @@ System.register(["./Loader"], function (exports_1, context_1) {
                         this.sceneCtx.imageSmoothingEnabled = false;
                         this.sceneWidth = width;
                         this.sceneHeight = height;
-                        this.loader.load(configUrl, function (configData) {
+                        Loader_1.loader.load(configUrl, function (configData) {
                             _this.configData = configData;
                             _this.resourcesLoaded = true;
                             console.log('configData', configData);
@@ -64,7 +83,7 @@ System.register(["./Loader"], function (exports_1, context_1) {
                 };
                 return Engine2d;
             }());
-            exports_1("default", Engine2d);
+            exports_1("Engine2d", Engine2d);
         }
     };
 });
