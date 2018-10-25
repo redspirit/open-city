@@ -8,17 +8,17 @@ export default class Sprite{
     private params:any;
     private bitmap:any;
 
-    img:any;
-    id:string = '';
-    rects: Rect[] = [];
-    scale:number = 1;
-    state:State = new State();
-    visible:boolean = true;
-    positions: Point[] = [];
-    private animationType:AnimationType = AnimationType.ANIMATE_REPEAT;
-    private animationCurrentFrame:number = 0;
-    private animationSkipFrames:number = 0;
-    private noStates:boolean = true;
+    public img:any;
+    public id:string = '';
+    public rects: Rect[] = [];
+    public scale:number = 1;
+    public state:State = new State();
+    public visible:boolean = true;
+    public positions: Point[] = [];
+    public noStates:boolean = true;
+    public animationType:AnimationType = AnimationType.ANIMATE_REPEAT;
+    public animationCurrentFrame:number = 0;
+    public animationSkipFrames:number = 0;
     private states:any = {};
 
     constructor(spriteId:string) {
@@ -30,7 +30,9 @@ export default class Sprite{
 
                 this.img = this.bitmap.img;
                 this.id = this.params.id;
-                this.rects = this.params.rects;
+                this.rects = this.params.rects.map((arr:number[]) => {
+                    return new Rect(arr[0], arr[1], arr[2], arr[3]);
+                });
                 this.scale = this.params.scale || 1;
 
                 this.params.states && this.params.states.forEach((state:State) => {

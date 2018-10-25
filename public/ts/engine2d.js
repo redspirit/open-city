@@ -395,7 +395,7 @@ let Engine2d = function(fps) {
 
         });
 
-    }
+    };
 
     let renderSprite = function (sprite, container) {
         // state = {"name": "explode", "frames": [0, 1, 2], "speed": 3}

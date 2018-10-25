@@ -2,10 +2,12 @@
 export default class Point{
     x : number;
     y : number;
+    extra : number;
 
-    constructor(x:number, y: number){
+    constructor(x:number, y: number, extra:number = 0){
         this.x = x;
         this.y = y;
+        this.extra = extra;
     }
 
     distanceTo(p:Point):number {

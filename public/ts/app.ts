@@ -1,10 +1,9 @@
 
 import BattleCity from "./game/Game"
 
+// sprite editor https://www.piskelapp.com
 let game = new BattleCity(document.getElementById('canvas'));
 
-// sprite editor https://www.piskelapp.com
-game.setMap('./maps/empty.txt');
 
 // set buttons
 game.inputAssign(38, 'up');
@@ -17,4 +16,5 @@ game.inputAssign(80, 'pause');      // P
 
 game.onReady(function () {
     console.log('Resources loaded');
+    game.loadMap('./maps/test.txt');
 });

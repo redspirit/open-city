@@ -9,9 +9,8 @@ System.register(["./game/Game"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            game = new Game_1.default(document.getElementById('canvas'));
             // sprite editor https://www.piskelapp.com
-            game.setMap('./maps/empty.txt');
+            game = new Game_1.default(document.getElementById('canvas'));
             // set buttons
             game.inputAssign(38, 'up');
             game.inputAssign(40, 'down');
@@ -22,6 +21,7 @@ System.register(["./game/Game"], function (exports_1, context_1) {
             game.inputAssign(80, 'pause'); // P
             game.onReady(function () {
                 console.log('Resources loaded');
+                game.loadMap('./maps/test.txt');
             });
         }
     };

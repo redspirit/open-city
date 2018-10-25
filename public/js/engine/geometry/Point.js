@@ -6,9 +6,11 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             Point = /** @class */ (function () {
-                function Point(x, y) {
+                function Point(x, y, extra) {
+                    if (extra === void 0) { extra = 0; }
                     this.x = x;
                     this.y = y;
+                    this.extra = extra;
                 }
                 Point.prototype.distanceTo = function (p) {
                     var a = this.x - p.x;

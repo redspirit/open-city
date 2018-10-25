@@ -1,11 +1,14 @@
-System.register(["./Loader", "./Engine2d"], function (exports_1, context_1) {
+System.register(["./Loader", "./geometry/Rect", "./Engine2d"], function (exports_1, context_1) {
     "use strict";
-    var Loader_1, Engine2d_1, Sprite;
+    var Loader_1, Rect_1, Engine2d_1, Sprite;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Loader_1_1) {
                 Loader_1 = Loader_1_1;
+            },
+            function (Rect_1_1) {
+                Rect_1 = Rect_1_1;
             },
             function (Engine2d_1_1) {
                 Engine2d_1 = Engine2d_1_1;
@@ -21,10 +24,10 @@ System.register(["./Loader", "./Engine2d"], function (exports_1, context_1) {
                     this.state = new Engine2d_1.State();
                     this.visible = true;
                     this.positions = [];
+                    this.noStates = true;
                     this.animationType = Engine2d_1.AnimationType.ANIMATE_REPEAT;
                     this.animationCurrentFrame = 0;
                     this.animationSkipFrames = 0;
-                    this.noStates = true;
                     this.states = {};
                     this.params = this.findSpriteConfig(spriteId);
                     if (this.params) {
@@ -32,7 +35,9 @@ System.register(["./Loader", "./Engine2d"], function (exports_1, context_1) {
                         if (this.bitmap) {
                             this.img = this.bitmap.img;
                             this.id = this.params.id;
-                            this.rects = this.params.rects;
+                            this.rects = this.params.rects.map(function (arr) {
+                                return new Rect_1.default(arr[0], arr[1], arr[2], arr[3]);
+                            });
                             this.scale = this.params.scale || 1;
                             this.params.states && this.params.states.forEach(function (state) {
                                 _this.states[state.name] = new Engine2d_1.State(state.name, state.frames, state.speed);

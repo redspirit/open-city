@@ -1,6 +1,8 @@
 import {loader} from "./Loader";
+import {containers} from "./Containers";
+import Container from "./Container";
 
-export enum AnimationType { STATIC, ANIMATE_REPEAT, ANIMATE_TO_END, ANIMATE_TO_HIDE };
+export enum AnimationType { STATIC, ANIMATE_REPEAT, ANIMATE_TO_END, ANIMATE_TO_HIDE }
 
 export class State {
     name:string;
@@ -28,9 +30,7 @@ export class Engine2d{
     private configData:any;
 
     // scene
-    private sceneCtx:any = null;
-    private sceneWidth:number = 0;
-    private sceneHeight:number = 0;
+    private scene:any = {};
 
     constructor(fps: number){
 
@@ -41,15 +41,19 @@ export class Engine2d{
         this.animElapsed = 0;
         this.animate();
 
+        this.scene.ctx = null;
+        this.scene.width = 0;
+        this.scene.height = 0;
+
     }
 
     public init(configUrl:string, canvas:any, width:number, height:number, cb:any):void {
 
         if (canvas.getContext){
-            this.sceneCtx = canvas.getContext('2d');
-            this.sceneCtx.imageSmoothingEnabled = false;
-            this.sceneWidth = width;
-            this.sceneHeight = height;
+            this.scene.ctx = canvas.getContext('2d');
+            this.scene.ctx.imageSmoothingEnabled = false;
+            this.scene.width = width;
+            this.scene.height = height;
 
             loader.load(configUrl, (configData:any) => {
                 this.configData = configData;
@@ -63,6 +67,10 @@ export class Engine2d{
         }
 
     };
+
+    public onUpdate(callback: any):void {
+        this.updateCallback = callback;
+    }
 
     private animate():void {
 
@@ -84,8 +92,12 @@ export class Engine2d{
 
     }
 
-    render():void {
-        //console.log('render');
+    private render():void {
+
+        this.scene.ctx.clearRect(0, 0, this.scene.width, this.scene.height);
+
+        containers.render(this.scene);
+
     }
 
 }

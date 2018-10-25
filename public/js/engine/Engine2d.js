@@ -1,11 +1,14 @@
-System.register(["./Loader"], function (exports_1, context_1) {
+System.register(["./Loader", "./Containers"], function (exports_1, context_1) {
     "use strict";
-    var Loader_1, AnimationType, State, Engine2d;
+    var Loader_1, Containers_1, AnimationType, State, Engine2d;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Loader_1_1) {
                 Loader_1 = Loader_1_1;
+            },
+            function (Containers_1_1) {
+                Containers_1 = Containers_1_1;
             }
         ],
         execute: function () {
@@ -16,7 +19,6 @@ System.register(["./Loader"], function (exports_1, context_1) {
                 AnimationType[AnimationType["ANIMATE_TO_HIDE"] = 3] = "ANIMATE_TO_HIDE";
             })(AnimationType || (AnimationType = {}));
             exports_1("AnimationType", AnimationType);
-            ;
             State = /** @class */ (function () {
                 function State(name, frames, speed) {
                     if (name === void 0) { name = ''; }
@@ -34,23 +36,24 @@ System.register(["./Loader"], function (exports_1, context_1) {
                     // resources properties
                     this.resourcesLoaded = false;
                     // scene
-                    this.sceneCtx = null;
-                    this.sceneWidth = 0;
-                    this.sceneHeight = 0;
+                    this.scene = {};
                     this.fpsInterval = 1000 / fps;
                     this.animThen = Date.now();
                     this.startTime = this.animThen;
                     this.animNow = 0;
                     this.animElapsed = 0;
                     this.animate();
+                    this.scene.ctx = null;
+                    this.scene.width = 0;
+                    this.scene.height = 0;
                 }
                 Engine2d.prototype.init = function (configUrl, canvas, width, height, cb) {
                     var _this = this;
                     if (canvas.getContext) {
-                        this.sceneCtx = canvas.getContext('2d');
-                        this.sceneCtx.imageSmoothingEnabled = false;
-                        this.sceneWidth = width;
-                        this.sceneHeight = height;
+                        this.scene.ctx = canvas.getContext('2d');
+                        this.scene.ctx.imageSmoothingEnabled = false;
+                        this.scene.width = width;
+                        this.scene.height = height;
                         Loader_1.loader.load(configUrl, function (configData) {
                             _this.configData = configData;
                             _this.resourcesLoaded = true;
@@ -63,6 +66,9 @@ System.register(["./Loader"], function (exports_1, context_1) {
                     }
                 };
                 ;
+                Engine2d.prototype.onUpdate = function (callback) {
+                    this.updateCallback = callback;
+                };
                 Engine2d.prototype.animate = function () {
                     var _this = this;
                     requestAnimationFrame(function () {
@@ -79,7 +85,8 @@ System.register(["./Loader"], function (exports_1, context_1) {
                     }
                 };
                 Engine2d.prototype.render = function () {
-                    //console.log('render');
+                    this.scene.ctx.clearRect(0, 0, this.scene.width, this.scene.height);
+                    Containers_1.containers.render(this.scene);
                 };
                 return Engine2d;
             }());

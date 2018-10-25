@@ -23,6 +23,18 @@ System.register(["./Rect"], function (exports_1, context_1) {
                 Box.prototype.toRect = function () {
                     return new Rect_1.default(this.x, this.y, this.x2 - this.x, this.y2 - this.y);
                 };
+                Box.prototype.getArea = function () {
+                    return Math.abs(this.x - this.x2) * Math.abs(this.y - this.y2);
+                };
+                Box.prototype.calcCollidedArea = function (box) {
+                    var box2 = this;
+                    var colBox = new Box(Math.max(box.x, box2.x), Math.max(box.y, box2.y), Math.min(box.x2, box2.x2), Math.min(box.y2, box2.y2));
+                    return {
+                        rect: colBox.toRect(),
+                        box: colBox,
+                        area: colBox.getArea()
+                    };
+                };
                 return Box;
             }());
             exports_1("default", Box);
