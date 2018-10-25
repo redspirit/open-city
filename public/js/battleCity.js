@@ -13,7 +13,7 @@ let BattleCity = function (canvas) {
     // INIT
     engine.initScene(canvas, 480, 480);
     engine.setBitmaps('tanks', './assets/bc_0.png');
-    engine.setBitmaps('blocks', './assets/bc_1.png');
+    engine.setBitmaps('blocks', './assets/bc_3.png');
     engine.setConfig('./assets/sprites.json');
 
     this.onReady = engine.load;
@@ -40,31 +40,17 @@ let BattleCity = function (canvas) {
     };
 
     let reset = function () {
-        player = new self.Tank(160, 416);
+        player = new self.Tank();
         myBullet = new self.Bullet();
 
+        player.spawn(160, 416);
+
+        // walls
         new engine.Container(0, 0, 480, 32).fillColor('gray').setCollisionGroup('wall');
         new engine.Container(0, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
         new engine.Container(448, 0, 32, 480).fillColor('gray').setCollisionGroup('wall');
         new engine.Container(0, 448, 480, 32).fillColor('gray').setCollisionGroup('wall');
 
-        new engine
-            .Container(10 * 16, 16 * 22 , 16, 16)
-            .addSprite(1, 'bricks', [
-               // [0,0,0], [8,0,1],
-                [0,8,1], [8,8,0]
-            ])
-            .setCollisionGroup('block')
-            .changeSize(0, 8, 16, 8);
-
-        new engine
-            .Container(13 * 16, 16 * 22 , 16, 16)
-            .addSprite(1, 'bricks', [
-                [0,0,0], [8,0,1],
-               // [0,8,1], [8,8,0]
-            ])
-            .setCollisionGroup('block')
-            .changeSize(0, 0, 16, 8);
 
     };
 
@@ -96,13 +82,7 @@ let BattleCity = function (canvas) {
                 let y = rows * 16 + 32;
 
                 if(index === 1) {
-                    new engine
-                        .Container(x, y, 16, 16)
-                        .addSprite(1, 'bricks', [
-                            [0,0,0], [8,0,1],
-                            [0,8,1], [8,8,0]
-                        ])
-                        .setCollisionGroup('block');
+                    new self.BricksBlock(x, y);
                 }
 
                 if(index === 2) {
@@ -213,11 +193,11 @@ let BattleCity = function (canvas) {
 
     // ACTORS
 
-    this.Tank = function(startX, startY){
+    this.Tank = function(){
 
-        let x = startX;
-        let y = startY;
-        let speed = 2;
+        let x = 0;
+        let y = 0;
+        let speed = 2.5;
         let direction = 0;
 
         let container = new engine
@@ -225,7 +205,8 @@ let BattleCity = function (canvas) {
             .addSprite(1, 'tank_1', 0, 0)
             .spriteState(1, 'top', engine.AnimationType.STATIC)
             .setCollisionGroup('player1')
-            .setZIndex(10);
+            .setZIndex(10)
+            .setVisible(false);
 
         let getGrid = function () {
             return {
@@ -234,7 +215,20 @@ let BattleCity = function (canvas) {
                 yMin: Math.floor(y / 16) * 16,
                 yMax: Math.floor(y / 16) * 16 + 16
             }
-        }
+        };
+
+        this.spawn = function (sx, sy) {
+            x = sx;
+            y = sy;
+            container.setVisible(true);
+        };
+
+        this.getCenter = function () {
+            return {
+                x: container.x + container.width / 2,
+                y: container.y + container.height / 2
+            }
+        };
 
         this.fire = function () {
 
@@ -254,8 +248,6 @@ let BattleCity = function (canvas) {
 
             let oldX = x;
             let oldY = y;
-            let turnOldX = x;
-            let turnOldY = y;
             let dir;
             let oldDirection = direction;
 
@@ -290,15 +282,7 @@ let BattleCity = function (canvas) {
                 let grid = getGrid();
                 let d1 = Math.abs(grid.yMin - y);
                 let d2 = Math.abs(grid.yMax - y);
-                if(d1 === d2) {
-
-                    // console.log('PIP!', grid.yMin - oldY);
-                    // console.log('PIP!', grid.yMax - oldY);
-                    console.log('PIP!', y - oldY);
-                    y = ((grid.yMin - oldY) > (grid.yMax - oldY)) ? grid.yMin : grid.yMax;
-                } else {
-                    y = d1 < d2 ? grid.yMin : grid.yMax;
-                }
+                y = d1 < d2 ? grid.yMin : grid.yMax;
                 oldY = y;
             }
             if((oldDirection === 3 || oldDirection === 4) && (direction === 1 || direction === 2)) {
@@ -368,6 +352,10 @@ let BattleCity = function (canvas) {
             return this;
         };
 
+        this.getContainer = function () {
+            return container;
+        };
+
         this.update = function () {
 
             if(!flying)
@@ -384,12 +372,18 @@ let BattleCity = function (canvas) {
 
             if(collisions.length > 0) {
 
-                console.log(collisions);
-
                 flying = false;
 
+                collisions.forEach(function (col) {
+                    if(col.collisionGroup === 'bricks') {
+                        let center = player.getCenter();
+                        let side = col.getSizeByTarget(center.x, center.y);
+                        col.getParent().hit(side);
+                    }
+                });
+
                 container.spriteVisible(1, false);
-                container.spriteVisible(2, true)
+                container.spriteVisible(2, true);
                 container.spriteState(2, 'explode', engine.AnimationType.ANIMATE_TO_HIDE);
 
             }
@@ -398,7 +392,92 @@ let BattleCity = function (canvas) {
 
     };
 
+    this.BricksBlock = function(sx, sy){
+
+        let self = this;
+
+        let parts = [true, true, true, true];
+
+        let container = new engine.Container(sx, sy, 16, 16, this);
+        container.addSprite(1, 'bricks', []);
+        container.setCollisionGroup('bricks');
+
+        let setParts = function (parts) {
+            let positions = [];
+            if(parts[0]) positions.push([0,0,0]);
+            if(parts[1]) positions.push([8,0,1]);
+            if(parts[2]) positions.push([8,8,0]);
+            if(parts[3]) positions.push([0,8,1]);
+            container.spritePosition(1, positions);
+
+            let box = new Bbox();
+            positions.forEach(function (pos) {
+                box.extendBox([pos[0], pos[1], 8, 8]);
+            });
+
+            let r = box.result();
+
+            container.changeSize(r[0], r[1], r[1], r[2]);
+            console.log(r);
+            
+        };
+
+        this.hit = function (side) {
+
+            if(side === 1) {
+                parts[0] = false;
+                parts[1] = false;
+            }
+            if(side === 2) {
+                parts[1] = false;
+                parts[2] = false;
+            }
+            if(side === 3) {
+                parts[2] = false;
+                parts[3] = false;
+            }
+            if(side === 4) {
+                parts[0] = false;
+                parts[3] = false;
+            }
+
+            setParts(parts);
+
+
+        };
+
+        setParts(parts);
+
+    };
+
     // TICKS ***************************
+
+    let Bbox = function(init) {
+        let inited = false;
+        let min_x = 0;
+        let min_y = 0;
+        let max_x = 0;
+        let max_y = 0;
+
+        this.extendBox = function (rect) {
+            if(!inited) {
+                min_x = rect[0];
+                min_y = rect[1];
+                max_x = rect[0] + rect[2];
+                max_y = rect[1] + rect[3];
+                inited = true;
+                return this;
+            }
+            min_x = Math.min(rect[0], min_x);
+            min_y = Math.min(rect[1], min_y);
+            max_x = Math.max(rect[2] + rect[0], max_x);
+            max_y = Math.max(rect[3] + rect[1], max_y);
+            return this;
+        };
+        this.result = function () {
+            return [min_x, min_y, max_x - min_x, max_y - min_y];
+        }
+    };
 
     engine.onUpdate(function () {
 

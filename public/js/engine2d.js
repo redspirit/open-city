@@ -169,7 +169,7 @@ let Engine2d = function(fps) {
         });
     };
 
-    this.Container = function (x, y, width, height) {
+    this.Container = function (x, y, width, height, parent) {
         let container = this;
 
         this.x = x;
@@ -178,6 +178,7 @@ let Engine2d = function(fps) {
         this.width = width;
         this.height = height;
         this.visible = true;
+        this.parent = parent;
         this.color = '';
         this.sprites = {};
         this.overflow = false;    // скрыть ли все спрайты за пределом контейнера (w, h)
@@ -187,6 +188,9 @@ let Engine2d = function(fps) {
         this.setName = function (name) {
             this.name = name;
             return this;
+        }
+        this.getParent = function () {
+            return this.parent;
         }
         this.addSprite = function (id, spriteName, position, y) {
             let sprite = new engine.Sprite(spriteName);
@@ -286,21 +290,20 @@ let Engine2d = function(fps) {
             let rect1 = [this.x, this.y, this.x + this.width, this.y + this.height];
             let rect2 = [cont.x, cont.y, cont.x + cont.width, cont.y + cont.height];
 
-            let box = [
-                Math.max(rect1[0], rect2[0]),
-                Math.max(rect1[1], rect2[1]),
-                Math.min(rect1[2], rect2[2]),
-                Math.min(rect1[3], rect2[3])
-            ];
+            let colResult = calcCollidedArea(rect1, rect2);
+            let box = colResult.rect;
+
             let targetCorner = 0;
             let sourceCorner = 0;
+            let targetSide = 0;
 
             let rect = [box[0], box[1], box[2]-box[0], box[3]-box[1]];
+            let relativeRect = [rect[0] - this.x, rect[1] - this.y, rect[2], rect[3]];
 
-            if(box[0] === rect2[0] && box[1] === rect2[1]) targetCorner = 1;
-            if(box[2] === rect2[2] && box[1] === rect2[1]) targetCorner = 2;
-            if(box[2] === rect2[2] && box[3] === rect2[3]) targetCorner = 3;
-            if(box[0] === rect2[0] && box[3] === rect2[3]) targetCorner = 4;
+            if(box[0] === rect2[0] && box[1] === rect2[1]) targetCorner = 1;    // left top
+            if(box[2] === rect2[2] && box[1] === rect2[1]) targetCorner = 2;    // right top
+            if(box[2] === rect2[2] && box[3] === rect2[3]) targetCorner = 3;    // right bottom
+            if(box[0] === rect2[0] && box[3] === rect2[3]) targetCorner = 4;    // left bottom
 
             if(rect1[0] === box[0] && rect1[1] === box[1]) sourceCorner = 1;
             if(rect1[2] === box[2] && rect1[1] === box[1]) sourceCorner = 2;
@@ -311,10 +314,12 @@ let Engine2d = function(fps) {
                 isCollided: true,
                 collidedBox: box,
                 collidedRect: rect,
+                relativeRect: relativeRect,
                 targetCorner: targetCorner,
                 sourceCorner: sourceCorner
             }
         }
+
         this.changeSize = function (x, y, w, h) {
             // изменить размер контернера указав внутренний бокс
 
@@ -337,6 +342,25 @@ let Engine2d = function(fps) {
             return this;
 
         }
+
+        this.getSizeByTarget = function(x, y){
+
+            let cx = this.x + this.width / 2;
+            let cy = this.y + this.height / 2;
+
+            let dx = cx - x;
+            let dy = cy - y;
+
+            if(Math.abs(dx) > Math.abs(dy)) {
+                // left - right
+                return dx > 0 ? 4 : 2
+            } else {
+                // top - bottom
+                return dy > 0 ? 1 : 3;
+            }
+
+        }
+
         containers.push(this);
         sortContainersByIndex();
 
@@ -490,6 +514,25 @@ let Engine2d = function(fps) {
 
     // UTILS **********************
 
+    let calcCollidedArea = function (r1, r2) {
+
+        let rect1 = [r1[0], r1[1], r1[2], r1[3]];
+        let rect2 = [r2[0], r2[1], r2[2], r2[3]];
+
+        let box = [
+            Math.max(rect1[0], rect2[0]),
+            Math.max(rect1[1], rect2[1]),
+            Math.min(rect1[2], rect2[2]),
+            Math.min(rect1[3], rect2[3])
+        ];
+
+        return {
+            rect: [
+                box[0], box[1], box[2]-box[0], box[3]-box[1]
+            ],
+            area: Math.abs(box[2]-box[0]) * Math.abs(box[3]-box[1])
+        }
+    }
 
     return this;
 };
