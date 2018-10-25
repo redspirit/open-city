@@ -1,128 +1,133 @@
-[
-  {
-    "id": "iron",
-    "bitmap": "blocks",
-    "rects": [
-      [16, 0, 8, 8]
-    ],
-    "scale": 2
-  },
-  {
-    "id": "grass",
-    "bitmap": "blocks",
-    "rects": [
-      [24, 0, 8, 8]
-    ],
-    "scale": 2
-  },
-  {
-    "id": "ice",
-    "bitmap": "blocks",
-    "rects": [
-      [32, 0, 8, 8]
-    ],
-    "scale": 2
-  },
-  {
-    "id": "bricks",
-    "bitmap": "blocks",
-    "rects": [
-      [42, 2, 4, 4],
-      [42, 10, 4, 4]
-    ],
-    "scale": 2
-  },
-  {
-    "id": "eagle",
-    "bitmap": "tanks",
-    "rects": [
-      [0, 256, 16, 16],
-      [16, 256, 16, 16]
-    ],
-    "states": [
-      {"name": "live", "frames": [0]},
-      {"name": "die", "frames": [1]}
-    ],
-    "scale": 2
-  },
-  {
-    "id": "water",
-    "bitmap": "blocks",
-    "rects": [
-      [24, 8, 8, 8],
-      [32, 8, 8, 8]
-    ],
-    "states": [
-      {"name": "idle", "frames": [0, 1], "speed": 18}
-    ],
-    "scale": 2
-  },
+{
+  "bitmaps": [
+    {"name": "tanks", "url": "./assets/bc_0.png"},
+    {"name": "blocks", "url": "./assets/bc_3.png"}
+  ],
+  "sprites": [
+    {
+      "id": "iron",
+      "bitmap": "blocks",
+      "rects": [
+        [16, 0, 8, 8]
+      ],
+      "scale": 2
+    },
+    {
+      "id": "grass",
+      "bitmap": "blocks",
+      "rects": [
+        [24, 0, 8, 8]
+      ],
+      "scale": 2
+    },
+    {
+      "id": "ice",
+      "bitmap": "blocks",
+      "rects": [
+        [32, 0, 8, 8]
+      ],
+      "scale": 2
+    },
+    {
+      "id": "bricks",
+      "bitmap": "blocks",
+      "rects": [
+        [42, 2, 4, 4],
+        [42, 10, 4, 4]
+      ],
+      "scale": 2
+    },
+    {
+      "id": "eagle",
+      "bitmap": "tanks",
+      "rects": [
+        [0, 256, 16, 16],
+        [16, 256, 16, 16]
+      ],
+      "states": [
+        {"name": "live", "frames": [0]},
+        {"name": "die", "frames": [1]}
+      ],
+      "scale": 2
+    },
+    {
+      "id": "water",
+      "bitmap": "blocks",
+      "rects": [
+        [24, 8, 8, 8],
+        [32, 8, 8, 8]
+      ],
+      "states": [
+        {"name": "idle", "frames": [0, 1], "speed": 18}
+      ],
+      "scale": 2
+    },
 
-  {
-    "id": "tank_1",
-    "bitmap": "tanks",
-    "rects": [
-      [0, 0, 16, 16],
-      [16, 0, 16, 16],
-      [32, 0, 16, 16],
-      [48, 0, 16, 16],
-      [64, 0, 16, 16],
-      [80, 0, 16, 16],
-      [96, 0, 16, 16],
-      [112, 0, 16, 16]
-    ],
-    "states": [
-      {"name": "up", "frames": [0, 1], "speed": 2},
-      {"name": "left", "frames": [2, 3], "speed": 2},
-      {"name": "down", "frames": [4, 5], "speed": 2},
-      {"name": "right", "frames": [6, 7], "speed": 2}
-    ],
-    "scale": 2
-  },
+    {
+      "id": "tank_1",
+      "bitmap": "tanks",
+      "rects": [
+        [0, 0, 16, 16],
+        [16, 0, 16, 16],
+        [32, 0, 16, 16],
+        [48, 0, 16, 16],
+        [64, 0, 16, 16],
+        [80, 0, 16, 16],
+        [96, 0, 16, 16],
+        [112, 0, 16, 16]
+      ],
+      "states": [
+        {"name": "up", "frames": [0, 1], "speed": 2},
+        {"name": "left", "frames": [2, 3], "speed": 2},
+        {"name": "down", "frames": [4, 5], "speed": 2},
+        {"name": "right", "frames": [6, 7], "speed": 2}
+      ],
+      "scale": 2
+    },
 
 
-  {
-    "id": "explode_1",
-    "bitmap": "tanks",
-    "rects": [
-      [176, 256, 16, 16],
-      [160, 272, 16, 16],
-      [176, 272, 16, 16]
-    ],
-    "states": [
-      {"name": "explode", "frames": [0, 1, 2], "speed": 1}
-    ],
-    "scale": 2
-  },
-  {
-    "id": "explode_2",
-    "bitmap": "tanks",
-    "rects": [
-      [192, 256, 32, 32],
-      [224, 256, 32, 32]
-    ],
-    "states": [
-      {"name": "explode", "frames": [0, 1], "speed": 3}
-    ],
-    "scale": 2
-  },
+    {
+      "id": "explode_1",
+      "bitmap": "tanks",
+      "rects": [
+        [176, 256, 16, 16],
+        [160, 272, 16, 16],
+        [176, 272, 16, 16]
+      ],
+      "states": [
+        {"name": "explode", "frames": [0, 1, 2], "speed": 1}
+      ],
+      "scale": 2
+    },
+    {
+      "id": "explode_2",
+      "bitmap": "tanks",
+      "rects": [
+        [192, 256, 32, 32],
+        [224, 256, 32, 32]
+      ],
+      "states": [
+        {"name": "explode", "frames": [0, 1], "speed": 3}
+      ],
+      "scale": 2
+    },
 
-  {
-    "id": "bullet",
-    "bitmap": "blocks",
-    "rects": [
-      [2, 2, 4, 4],
-      [10, 2, 4, 4],
-      [2, 10, 4, 4],
-      [10, 10, 4, 4]
-    ],
-    "states": [
-      {"name": "up", "frames": [0]},
-      {"name": "left", "frames": [1]},
-      {"name": "down", "frames": [2]},
-      {"name": "right", "frames": [3]}
-    ],
-    "scale": 2
-  }
-
-]
+    {
+      "id": "bullet",
+      "bitmap": "blocks",
+      "rects": [
+        [2, 2, 4, 4],
+        [10, 2, 4, 4],
+        [2, 10, 4, 4],
+        [10, 10, 4, 4]
+      ],
+      "states": [
+        {"name": "up", "frames": [0]},
+        {"name": "left", "frames": [1]},
+        {"name": "down", "frames": [2]},
+        {"name": "right", "frames": [3]}
+      ],
+      "scale": 2
+    }
+  ]
+}

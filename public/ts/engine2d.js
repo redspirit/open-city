@@ -1,5 +1,4 @@
 
-
 let Engine2d = function(fps) {
 
     let engine = this;

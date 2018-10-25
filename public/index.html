@@ -32,9 +32,16 @@
         </div>
     </div>
 
-    <script src="./js/engine2d.js"></script>
-    <script src="./js/battleCity.js"></script>
-    <script src="./js/game.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.21.5/system.js"></script>
+    <script>
+        SystemJS.config({
+            baseURL: "js",
+            packages: {
+                "/": { defaultExtension: "js" }
+            }
+        });
+        System.import("app.js");
+    </script>
 
 </body>
 
