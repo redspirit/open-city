@@ -3,11 +3,15 @@ import {mapBuilder} from "./MapBuilder";
 import Rect from "../engine/geometry/Rect";
 import Container from "../engine/Container";
 import {containers} from "../engine/Containers";
+import {input, InputAction} from "./Input";
+import Tank from "./Actors/Tank";
+import Point from "../engine/geometry/Point";
 
 export default class BattleCity{
     private engine : Engine2d;
     private readyCallback: any;
 
+    public player:any; //Tank
 
     constructor(canvas: any){
 
@@ -19,7 +23,18 @@ export default class BattleCity{
 
         this.engine.onUpdate(() => {
             this.update();
-        })
+        });
+
+        input.onPressed((command:InputAction) => {
+
+            if(command === InputAction.FIRE) {
+                this.player.fire();
+            }
+
+        });
+        input.onReleased(function (command:InputAction) {
+
+        });
 
     }
 
@@ -27,12 +42,13 @@ export default class BattleCity{
         mapBuilder.buildFromFile(url);
     }
 
-
-    public inputAssign(code: number, action: string):void {
-
-    }
+    public inputAssign(code:number, command:InputAction):void {
+        input.assign(code, command);
+    };
 
     public reset() {
+
+        this.player = new Tank().spawn(new Point(160, 416));
 
         // walls
         new Container(new Rect(0, 0, 480, 32)).fillColor('gray').setCollisionGroup('wall');
@@ -44,6 +60,7 @@ export default class BattleCity{
 
     private update():void {
 
+        this.player.update();
 
     }
 

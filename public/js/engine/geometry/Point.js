@@ -24,6 +24,11 @@ System.register(["./Rect"], function (exports_1, context_1) {
                 Point.prototype.toRect = function (w, h) {
                     return new Rect_1.default(this.x, this.y, w, h);
                 };
+                Point.prototype.snapToGrid = function (cellW, cellH) {
+                    this.x = Math.floor(this.x / cellW) * cellW;
+                    this.y = Math.floor(this.y / cellH) * cellH;
+                    return this;
+                };
                 return Point;
             }());
             exports_1("default", Point);

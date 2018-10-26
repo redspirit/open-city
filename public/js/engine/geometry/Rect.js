@@ -1,11 +1,14 @@
-System.register(["./Box"], function (exports_1, context_1) {
+System.register(["./Box", "./Point"], function (exports_1, context_1) {
     "use strict";
-    var Box_1, Rect;
+    var Box_1, Point_1, Rect;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Box_1_1) {
                 Box_1 = Box_1_1;
+            },
+            function (Point_1_1) {
+                Point_1 = Point_1_1;
             }
         ],
         execute: function () {
@@ -71,6 +74,13 @@ System.register(["./Box"], function (exports_1, context_1) {
                         collidedRect: colResult.rect,
                     };
                 };
+                Rect.prototype.toPoint = function () {
+                    return new Point_1.default(this.x, this.y);
+                };
+                Rect.prototype.getCenter = function () {
+                    return new Point_1.default(this.x + this.w / 2, this.y + this.h / 2);
+                };
+                ;
                 return Rect;
             }());
             exports_1("default", Rect);

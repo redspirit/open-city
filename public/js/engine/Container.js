@@ -26,8 +26,10 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     this.collisionGroup = '';
                     this.zIndex = 0;
                     this.rect = rect;
-                    if (insertToList)
+                    if (insertToList) {
                         Containers_1.containers.add(this);
+                        Containers_1.containers.sortByIndex();
+                    }
                 }
                 Container.prototype.setName = function (name) {
                     this.name = name;
@@ -103,7 +105,9 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     return this;
                 };
                 Container.prototype.findCollidedContainers = function (excludedGroups, excludedNames) {
-                    var me = this;
+                    var _this = this;
+                    if (excludedGroups === void 0) { excludedGroups = []; }
+                    if (excludedNames === void 0) { excludedNames = []; }
                     var groups = excludedGroups || [];
                     var names = excludedNames || [];
                     return Containers_1.containers.getAll().filter(function (c) {
@@ -111,7 +115,7 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                             return false;
                         if (groups.indexOf(c.collisionGroup) > -1 || names.indexOf(c.name) > -1)
                             return false;
-                        return me.collisionGroup !== c.collisionGroup && me.rect.isCollided(c.rect);
+                        return _this.collisionGroup !== c.collisionGroup && _this.rect.isCollided(c.rect);
                     });
                 };
                 ;

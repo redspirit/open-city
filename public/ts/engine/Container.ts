@@ -21,7 +21,10 @@ export default class Container {
 
     constructor(rect:Rect, insertToList: boolean = true) {
         this.rect = rect;
-        if(insertToList) containers.add(this)
+        if(insertToList) {
+            containers.add(this);
+            containers.sortByIndex();
+        }
     }
 
     public setName (name:string) {
@@ -96,14 +99,13 @@ export default class Container {
         return this;
     }
 
-    public findCollidedContainers (excludedGroups:string[], excludedNames:string[]) {
-        let me = this;
+    public findCollidedContainers (excludedGroups:string[] = [], excludedNames:string[] = []) {
         let groups = excludedGroups || [];
         let names = excludedNames || [];
-        return containers.getAll().filter(function (c) {
+        return containers.getAll().filter((c:Container) => {
             if(!c.collisionGroup) return false;
             if(groups.indexOf(c.collisionGroup) > -1 || names.indexOf(c.name) > -1) return false;
-            return me.collisionGroup !== c.collisionGroup && me.rect.isCollided(c.rect);
+            return this.collisionGroup !== c.collisionGroup && this.rect.isCollided(c.rect);
         });
     };
 

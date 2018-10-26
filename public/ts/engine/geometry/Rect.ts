@@ -84,5 +84,12 @@ export default class Rect{
         }
     }
 
+    public toPoint():Point {
+        return new Point(this.x, this.y);
+    }
+
+    public getCenter():Point {
+        return new Point(this.x + this.w / 2, this.y + this.h / 2);
+    };
 
 }

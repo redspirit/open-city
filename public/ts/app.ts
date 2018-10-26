@@ -1,18 +1,19 @@
 
 import BattleCity from "./game/Game"
+import {InputAction} from "./game/Input";
 
 // sprite editor https://www.piskelapp.com
 let game = new BattleCity(document.getElementById('canvas'));
 
 
 // set buttons
-game.inputAssign(38, 'up');
-game.inputAssign(40, 'down');
-game.inputAssign(37, 'left');
-game.inputAssign(39, 'right');
-game.inputAssign(32, 'fire');       // Space
-game.inputAssign(82, 'reset');      // R
-game.inputAssign(80, 'pause');      // P
+game.inputAssign(38, InputAction.UP);
+game.inputAssign(40, InputAction.DOWN);
+game.inputAssign(37, InputAction.LEFT);
+game.inputAssign(39, InputAction.RIGHT);
+game.inputAssign(32, InputAction.FIRE);       // Space
+game.inputAssign(82, InputAction.RESET);      // R
+game.inputAssign(80, InputAction.PAUSE);      // P
 
 game.onReady(function () {
     console.log('Resources loaded');
