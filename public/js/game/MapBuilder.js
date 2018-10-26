@@ -1,6 +1,6 @@
-System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/geometry/Point"], function (exports_1, context_1) {
+System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/geometry/Point", "./Actors/Bricks"], function (exports_1, context_1) {
     "use strict";
-    var Container_1, Rect_1, Point_1, MapBuilder, mapBuilder;
+    var Container_1, Rect_1, Point_1, Bricks_1, MapBuilder, mapBuilder;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -12,6 +12,9 @@ System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/ge
             },
             function (Point_1_1) {
                 Point_1 = Point_1_1;
+            },
+            function (Bricks_1_1) {
+                Bricks_1 = Bricks_1_1;
             }
         ],
         execute: function () {
@@ -35,7 +38,7 @@ System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/ge
                             var x = cols * 16 + 32;
                             var y = rows * 16 + 32;
                             if (index === 1) {
-                                //new self.BricksBlock(x, y);
+                                new Bricks_1.default(new Point_1.default(x, y));
                             }
                             if (index === 2) {
                                 new Container_1.default(new Rect_1.default(x, y, 16, 16))

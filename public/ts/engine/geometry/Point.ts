@@ -1,3 +1,4 @@
+import Rect from "./Rect";
 
 export default class Point{
     x : number;
@@ -14,6 +15,10 @@ export default class Point{
         let a:number = this.x - p.x;
         let b:number = this.y - p.y;
         return Math.sqrt(a*a + b*b);
+    }
+
+    toRect(w:number, h:number):Rect {
+        return new Rect(this.x, this.y, w, h);
     }
 
 }

@@ -98,9 +98,9 @@ System.register(["./Engine2d"], function (exports_1, context_1) {
                         sprite.animationSkipFrames++;
                     }
                     sprite.positions.forEach(function (pos) {
-                        if (!sprite.state) {
-                            //let rectIndex = pos.extra || 0;
-                            //rect = sprite.rects[rectIndex];
+                        if (sprite.noStates) {
+                            var rectIndex = pos.extra || 0;
+                            rect = sprite.rects[rectIndex];
                         }
                         if (container.overflow) {
                             viewPortX = (container.rect.w - pos.x) / sprite.scale;

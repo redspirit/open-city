@@ -119,9 +119,9 @@ class Containers {
 
         sprite.positions.forEach(function (pos:Point) {
 
-            if(!sprite.state) {
-                //let rectIndex = pos.extra || 0;
-                //rect = sprite.rects[rectIndex];
+            if(sprite.noStates) {
+                let rectIndex = pos.extra || 0;
+                rect = sprite.rects[rectIndex];
             }
 
             if(container.overflow) {

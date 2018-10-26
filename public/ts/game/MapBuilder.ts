@@ -2,6 +2,7 @@ import Container from "../engine/Container";
 import Rect from "../engine/geometry/Rect";
 import Point from "../engine/geometry/Point";
 import {containers} from "../engine/Containers";
+import Bricks from "./Actors/Bricks";
 
 class MapBuilder {
 
@@ -26,7 +27,7 @@ class MapBuilder {
                 let y:number = rows * 16 + 32;
 
                 if(index === 1) {
-                    //new self.BricksBlock(x, y);
+                    new Bricks(new Point(x,y));
                 }
 
                 if(index === 2) {

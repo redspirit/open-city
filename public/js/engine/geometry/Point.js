@@ -1,9 +1,13 @@
-System.register([], function (exports_1, context_1) {
+System.register(["./Rect"], function (exports_1, context_1) {
     "use strict";
-    var Point;
+    var Rect_1, Point;
     var __moduleName = context_1 && context_1.id;
     return {
-        setters: [],
+        setters: [
+            function (Rect_1_1) {
+                Rect_1 = Rect_1_1;
+            }
+        ],
         execute: function () {
             Point = /** @class */ (function () {
                 function Point(x, y, extra) {
@@ -16,6 +20,9 @@ System.register([], function (exports_1, context_1) {
                     var a = this.x - p.x;
                     var b = this.y - p.y;
                     return Math.sqrt(a * a + b * b);
+                };
+                Point.prototype.toRect = function (w, h) {
+                    return new Rect_1.default(this.x, this.y, w, h);
                 };
                 return Point;
             }());

@@ -1,7 +1,8 @@
 {
   "bitmaps": [
     {"name": "tanks", "url": "./assets/bc_0.png"},
-    {"name": "blocks", "url": "./assets/bc_3.png"}
+    {"name": "blocks", "url": "./assets/bc_1.png"},
+    {"name": "blocks_", "url": "./assets/bc_3.png"}
   ],
   "sprites": [
     {
