@@ -2,14 +2,13 @@
 import Container from "./Container";
 import Sprite from "./Sprite";
 import {AnimationType, State} from "./Engine2d";
-import Rect from "./geometry/Rect";
+import {Rect} from "./geometry/Rect";
 import Point from "./geometry/Point";
 
 
 class Containers {
 
     public containers: Container[] = [];
-
 
     public getAll() {
         return this.containers;

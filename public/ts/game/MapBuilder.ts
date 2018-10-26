@@ -1,7 +1,6 @@
 import Container from "../engine/Container";
-import Rect from "../engine/geometry/Rect";
+import {Rect} from "../engine/geometry/Rect";
 import Point from "../engine/geometry/Point";
-import {containers} from "../engine/Containers";
 import Bricks from "./Actors/Bricks";
 
 class MapBuilder {

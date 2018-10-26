@@ -1,6 +1,6 @@
-System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect", "../engine/Container", "./Input", "./Actors/Tank", "../engine/geometry/Point"], function (exports_1, context_1) {
+System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect", "../engine/Container", "./Input", "./Actors/Tank", "../engine/geometry/Point", "./Actors/Bullet"], function (exports_1, context_1) {
     "use strict";
-    var Engine2d_1, MapBuilder_1, Rect_1, Container_1, Input_1, Tank_1, Point_1, BattleCity;
+    var Engine2d_1, MapBuilder_1, Rect_1, Container_1, Input_1, Tank_1, Point_1, Bullet_1, BattleCity;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -24,6 +24,9 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
             },
             function (Point_1_1) {
                 Point_1 = Point_1_1;
+            },
+            function (Bullet_1_1) {
+                Bullet_1 = Bullet_1_1;
             }
         ],
         execute: function () {
@@ -40,7 +43,7 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
                     });
                     Input_1.input.onPressed(function (command) {
                         if (command === Input_1.InputAction.FIRE) {
-                            _this.player.fire();
+                            _this.player.fire(_this.myBullet);
                         }
                     });
                     Input_1.input.onReleased(function (command) {
@@ -55,14 +58,16 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
                 ;
                 BattleCity.prototype.reset = function () {
                     this.player = new Tank_1.default().spawn(new Point_1.default(160, 416));
+                    this.myBullet = new Bullet_1.default();
                     // walls
-                    new Container_1.default(new Rect_1.default(0, 0, 480, 32)).fillColor('gray').setCollisionGroup('wall');
-                    new Container_1.default(new Rect_1.default(0, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');
-                    new Container_1.default(new Rect_1.default(448, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');
-                    new Container_1.default(new Rect_1.default(0, 448, 480, 32)).fillColor('gray').setCollisionGroup('wall');
+                    new Container_1.default(new Rect_1.Rect(0, 0, 480, 32)).fillColor('gray').setCollisionGroup('wall');
+                    new Container_1.default(new Rect_1.Rect(0, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');
+                    new Container_1.default(new Rect_1.Rect(448, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');
+                    new Container_1.default(new Rect_1.Rect(0, 448, 480, 32)).fillColor('gray').setCollisionGroup('wall');
                 };
                 BattleCity.prototype.update = function () {
                     this.player.update();
+                    this.myBullet.update();
                 };
                 BattleCity.prototype.onReady = function (callback) {
                     this.readyCallback = callback;

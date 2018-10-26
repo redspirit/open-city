@@ -1,10 +1,10 @@
 import Container from "../../engine/Container";
 import Point from "../../engine/geometry/Point";
-import Rect from "../../engine/geometry/Rect";
+import {Rect} from "../../engine/geometry/Rect";
 import {AnimationType} from "../../engine/Engine2d";
 import {input, InputAction} from "../Input";
-import Box from "../../engine/geometry/Box";
 import Utils from "../../engine/geometry/Utils";
+import Bullet from "./Bullet";
 
 enum TankDirection {UP, DOWN, LEFT, RIGHT, STAY}
 
@@ -35,9 +35,10 @@ export default class Tank extends Container{
         return this;
     };
 
-    public fire():Tank {
+    public fire(bullet:Bullet):Tank {
 
         let offset:Point = new Point(0,0);
+        bullet.tank = this;
 
         // позиционируем пулю относительно танка
         if(this.direction === TankDirection.UP) { offset.x = 12; offset.y = 0; }
@@ -45,7 +46,7 @@ export default class Tank extends Container{
         if(this.direction === TankDirection.LEFT) { offset.x = 0;  offset.y = 12; }
         if(this.direction === TankDirection.RIGHT) { offset.x = 24; offset.y = 12; }
 
-        //myBullet.start(x + offsetX, y + offsetY, direction);
+        bullet.start(new Point(this.rect.x, this.rect.y).plus(offset), this.direction);
 
         return this;
 

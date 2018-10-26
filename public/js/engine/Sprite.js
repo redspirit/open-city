@@ -36,7 +36,7 @@ System.register(["./Loader", "./geometry/Rect", "./Engine2d"], function (exports
                             this.img = this.bitmap.img;
                             this.id = this.params.id;
                             this.rects = this.params.rects.map(function (arr) {
-                                return new Rect_1.default(arr[0], arr[1], arr[2], arr[3]);
+                                return new Rect_1.Rect(arr[0], arr[1], arr[2], arr[3]);
                             });
                             this.scale = this.params.scale || 1;
                             this.params.states && this.params.states.forEach(function (state) {

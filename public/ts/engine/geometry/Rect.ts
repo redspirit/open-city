@@ -2,11 +2,15 @@
 import Box from "./Box";
 import Point from "./Point";
 
-export default class Rect{
+export enum RectSide {TOP, RIGHT, BOTTOM, LEFT};
+
+export class Rect{
     public x : number;
     public y : number;
     public w : number;
     public h : number;
+
+    private _child:any;
 
     constructor(x: number, y: number, w: number, h: number){
         this.x = x;
@@ -14,6 +18,14 @@ export default class Rect{
         this.w = w;
         this.h = h;
     }
+
+    public setChild(child:any):void {
+        this._child = child;
+    }
+    public getChild():any {
+        return this._child;
+    }
+
 
     public isCollided(rect:Rect):boolean {
         return this.x < rect.x + rect.w && this.x + this.w > rect.x &&
@@ -24,12 +36,7 @@ export default class Rect{
         return new Box(this.x, this.y, this.w + this.x, this.h + this.y);
     }
 
-    public getSizeByTarget(p:Point) {
-
-        // top = 1
-        // right = 2
-        // bottom = 3
-        // left = 4
+    public getSizeByTarget(p:Point):RectSide {
 
         let cx = this.x + this.w / 2;
         let cy = this.y + this.h / 2;
@@ -38,9 +45,9 @@ export default class Rect{
         let dy = cy - p.y;
 
         if (Math.abs(dx) > Math.abs(dy)) {
-            return dx > 0 ? 4 : 2
+            return dx > 0 ? RectSide.LEFT : RectSide.RIGHT
         } else {
-            return dy > 0 ? 1 : 3;
+            return dy > 0 ? RectSide.TOP : RectSide.BOTTOM
         }
     }
 

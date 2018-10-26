@@ -1,6 +1,5 @@
 
-import Point from "./Point"
-import Rect from "./Rect";
+import {Rect} from "./Rect";
 
 export default class Box{
     x : number;

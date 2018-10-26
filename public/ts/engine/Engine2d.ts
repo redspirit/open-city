@@ -1,6 +1,5 @@
 import {loader} from "./Loader";
 import {containers} from "./Containers";
-import Container from "./Container";
 
 export enum AnimationType { STATIC, ANIMATE_REPEAT, ANIMATE_TO_END, ANIMATE_TO_HIDE }
 

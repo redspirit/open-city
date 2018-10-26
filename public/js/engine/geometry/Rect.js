@@ -1,6 +1,6 @@
 System.register(["./Box", "./Point"], function (exports_1, context_1) {
     "use strict";
-    var Box_1, Point_1, Rect;
+    var Box_1, Point_1, RectSide, Rect;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -12,6 +12,14 @@ System.register(["./Box", "./Point"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
+            (function (RectSide) {
+                RectSide[RectSide["TOP"] = 0] = "TOP";
+                RectSide[RectSide["RIGHT"] = 1] = "RIGHT";
+                RectSide[RectSide["BOTTOM"] = 2] = "BOTTOM";
+                RectSide[RectSide["LEFT"] = 3] = "LEFT";
+            })(RectSide || (RectSide = {}));
+            exports_1("RectSide", RectSide);
+            ;
             Rect = /** @class */ (function () {
                 function Rect(x, y, w, h) {
                     this.x = x;
@@ -19,6 +27,12 @@ System.register(["./Box", "./Point"], function (exports_1, context_1) {
                     this.w = w;
                     this.h = h;
                 }
+                Rect.prototype.setChild = function (child) {
+                    this._child = child;
+                };
+                Rect.prototype.getChild = function () {
+                    return this._child;
+                };
                 Rect.prototype.isCollided = function (rect) {
                     return this.x < rect.x + rect.w && this.x + this.w > rect.x &&
                         this.y < rect.y + rect.h && this.h + this.y > rect.y;
@@ -27,19 +41,15 @@ System.register(["./Box", "./Point"], function (exports_1, context_1) {
                     return new Box_1.default(this.x, this.y, this.w + this.x, this.h + this.y);
                 };
                 Rect.prototype.getSizeByTarget = function (p) {
-                    // top = 1
-                    // right = 2
-                    // bottom = 3
-                    // left = 4
                     var cx = this.x + this.w / 2;
                     var cy = this.y + this.h / 2;
                     var dx = cx - p.x;
                     var dy = cy - p.y;
                     if (Math.abs(dx) > Math.abs(dy)) {
-                        return dx > 0 ? 4 : 2;
+                        return dx > 0 ? RectSide.LEFT : RectSide.RIGHT;
                     }
                     else {
-                        return dy > 0 ? 1 : 3;
+                        return dy > 0 ? RectSide.TOP : RectSide.BOTTOM;
                     }
                 };
                 Rect.prototype.getCollisionDetails = function (rect2) {
@@ -83,7 +93,7 @@ System.register(["./Box", "./Point"], function (exports_1, context_1) {
                 ;
                 return Rect;
             }());
-            exports_1("default", Rect);
+            exports_1("Rect", Rect);
         }
     };
 });

@@ -41,28 +41,28 @@ System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/ge
                                 new Bricks_1.default(new Point_1.default(x, y));
                             }
                             if (index === 2) {
-                                new Container_1.default(new Rect_1.default(x, y, 16, 16))
+                                new Container_1.default(new Rect_1.Rect(x, y, 16, 16))
                                     .addSprite(1, 'iron', [new Point_1.default(0, 0)])
                                     .setCollisionGroup('block');
                             }
                             if (index === 3) {
-                                new Container_1.default(new Rect_1.default(x, y, 16, 16))
+                                new Container_1.default(new Rect_1.Rect(x, y, 16, 16))
                                     .addSprite(1, 'grass', [new Point_1.default(0, 0)])
                                     .setZIndex(15);
                             }
                             if (index === 4) {
-                                new Container_1.default(new Rect_1.default(x, y, 16, 16))
+                                new Container_1.default(new Rect_1.Rect(x, y, 16, 16))
                                     .addSprite(1, 'ice', [new Point_1.default(0, 0)]);
                             }
                             if (index === 5) {
-                                new Container_1.default(new Rect_1.default(x, y, 16, 16))
+                                new Container_1.default(new Rect_1.Rect(x, y, 16, 16))
                                     .addSprite(1, 'water', [new Point_1.default(0, 0)])
                                     .spriteState(1, 'idle')
                                     .setCollisionGroup('block')
                                     .setName('water');
                             }
                             if (index === 6) {
-                                new Container_1.default(new Rect_1.default(x, y, 16, 16))
+                                new Container_1.default(new Rect_1.Rect(x, y, 16, 16))
                                     .addSprite(1, 'eagle', [new Point_1.default(0, 0)])
                                     .spriteState(1, 'live')
                                     .setCollisionGroup('block');

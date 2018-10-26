@@ -1,4 +1,4 @@
-import Rect from "./Rect";
+import {Rect} from "./Rect";
 
 export default class Point{
     x : number;
@@ -21,9 +21,15 @@ export default class Point{
         return new Rect(this.x, this.y, w, h);
     }
 
-    public snapToGrid(cellW:number, cellH:number):Point {
+    snapToGrid(cellW:number, cellH:number):Point {
         this.x = Math.floor(this.x / cellW) * cellW;
         this.y = Math.floor(this.y / cellH) * cellH;
+        return this;
+    }
+
+    plus(p:Point):Point {
+        this.x += p.x;
+        this.y += p.y;
         return this;
     }
 

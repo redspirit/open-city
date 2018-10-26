@@ -20,6 +20,7 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     if (insertToList === void 0) { insertToList = true; }
                     this.name = '';
                     this.visible = true;
+                    this.index = 0;
                     this.color = '';
                     this.sprites = {};
                     this.overflow = false; // скрыть ли все спрайты за пределом контейнера (w, h)
@@ -31,6 +32,8 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                         Containers_1.containers.sortByIndex();
                     }
                 }
+                Container.prototype.destroy = function () {
+                };
                 Container.prototype.setName = function (name) {
                     this.name = name;
                     return this;
@@ -111,7 +114,7 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     var groups = excludedGroups || [];
                     var names = excludedNames || [];
                     return Containers_1.containers.getAll().filter(function (c) {
-                        if (!c.collisionGroup)
+                        if (!c.collisionGroup || !c.visible)
                             return false;
                         if (groups.indexOf(c.collisionGroup) > -1 || names.indexOf(c.name) > -1)
                             return false;

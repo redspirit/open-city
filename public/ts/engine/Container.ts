@@ -1,5 +1,5 @@
 
-import Rect from "./geometry/Rect";
+import {Rect} from "./geometry/Rect";
 import Sprite from "./Sprite";
 import Point from "./geometry/Point";
 import {AnimationType} from "./Engine2d";
@@ -13,6 +13,7 @@ export default class Container {
     public name:string = '';
 
     public visible:boolean = true;
+    public index:number = 0;
     public color:string = '';
     private sprites:any = {};
     public overflow:boolean = false;    // скрыть ли все спрайты за пределом контейнера (w, h)
@@ -25,6 +26,10 @@ export default class Container {
             containers.add(this);
             containers.sortByIndex();
         }
+    }
+
+    public destroy() {
+
     }
 
     public setName (name:string) {
@@ -103,7 +108,7 @@ export default class Container {
         let groups = excludedGroups || [];
         let names = excludedNames || [];
         return containers.getAll().filter((c:Container) => {
-            if(!c.collisionGroup) return false;
+            if(!c.collisionGroup || !c.visible) return false;
             if(groups.indexOf(c.collisionGroup) > -1 || names.indexOf(c.name) > -1) return false;
             return this.collisionGroup !== c.collisionGroup && this.rect.isCollided(c.rect);
         });

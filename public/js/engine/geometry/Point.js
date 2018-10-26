@@ -22,11 +22,16 @@ System.register(["./Rect"], function (exports_1, context_1) {
                     return Math.sqrt(a * a + b * b);
                 };
                 Point.prototype.toRect = function (w, h) {
-                    return new Rect_1.default(this.x, this.y, w, h);
+                    return new Rect_1.Rect(this.x, this.y, w, h);
                 };
                 Point.prototype.snapToGrid = function (cellW, cellH) {
                     this.x = Math.floor(this.x / cellW) * cellW;
                     this.y = Math.floor(this.y / cellH) * cellH;
+                    return this;
+                };
+                Point.prototype.plus = function (p) {
+                    this.x += p.x;
+                    this.y += p.y;
                     return this;
                 };
                 return Point;

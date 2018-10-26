@@ -21,7 +21,7 @@ System.register(["./Rect"], function (exports_1, context_1) {
                         this.y < box.y2 && this.y2 > box.y;
                 };
                 Box.prototype.toRect = function () {
-                    return new Rect_1.default(this.x, this.y, this.x2 - this.x, this.y2 - this.y);
+                    return new Rect_1.Rect(this.x, this.y, this.x2 - this.x, this.y2 - this.y);
                 };
                 Box.prototype.getArea = function () {
                     return Math.abs(this.x - this.x2) * Math.abs(this.y - this.y2);

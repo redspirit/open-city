@@ -1,17 +1,18 @@
 import {Engine2d} from "../engine/Engine2d";
 import {mapBuilder} from "./MapBuilder";
-import Rect from "../engine/geometry/Rect";
+import {Rect} from "../engine/geometry/Rect";
 import Container from "../engine/Container";
-import {containers} from "../engine/Containers";
 import {input, InputAction} from "./Input";
 import Tank from "./Actors/Tank";
 import Point from "../engine/geometry/Point";
+import Bullet from "./Actors/Bullet";
 
 export default class BattleCity{
     private engine : Engine2d;
     private readyCallback: any;
 
     public player:any; //Tank
+    public myBullet:any; //Bullet
 
     constructor(canvas: any){
 
@@ -28,7 +29,7 @@ export default class BattleCity{
         input.onPressed((command:InputAction) => {
 
             if(command === InputAction.FIRE) {
-                this.player.fire();
+                this.player.fire(this.myBullet);
             }
 
         });
@@ -49,6 +50,7 @@ export default class BattleCity{
     public reset() {
 
         this.player = new Tank().spawn(new Point(160, 416));
+        this.myBullet = new Bullet();
 
         // walls
         new Container(new Rect(0, 0, 480, 32)).fillColor('gray').setCollisionGroup('wall');
@@ -61,6 +63,7 @@ export default class BattleCity{
     private update():void {
 
         this.player.update();
+        this.myBullet.update();
 
     }
 

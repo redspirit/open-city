@@ -47,7 +47,7 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
             Tank = /** @class */ (function (_super) {
                 __extends(Tank, _super);
                 function Tank() {
-                    var _this = _super.call(this, new Rect_1.default(0, 0, 32, 32)) || this;
+                    var _this = _super.call(this, new Rect_1.Rect(0, 0, 32, 32)) || this;
                     // private pos: Point;
                     _this.speed = 2.5;
                     _this.direction = TankDirection.UP;
@@ -66,8 +66,9 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                     return this;
                 };
                 ;
-                Tank.prototype.fire = function () {
+                Tank.prototype.fire = function (bullet) {
                     var offset = new Point_1.default(0, 0);
+                    bullet.tank = this;
                     // позиционируем пулю относительно танка
                     if (this.direction === TankDirection.UP) {
                         offset.x = 12;
@@ -85,7 +86,7 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                         offset.x = 24;
                         offset.y = 12;
                     }
-                    //myBullet.start(x + offsetX, y + offsetY, direction);
+                    bullet.start(new Point_1.default(this.rect.x, this.rect.y).plus(offset), this.direction);
                     return this;
                 };
                 ;

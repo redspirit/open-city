@@ -1,5 +1,5 @@
 import {loader} from "./Loader";
-import Rect from "./geometry/Rect";
+import {Rect} from "./geometry/Rect";
 import Point from "./geometry/Point";
 import {AnimationType, State} from "./Engine2d";
 
