@@ -30,7 +30,7 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
             }
         ],
         execute: function () {
-            BattleCity = /** @class */ (function () {
+            BattleCity = (function () {
                 function BattleCity(canvas) {
                     var _this = this;
                     this.engine = new Engine2d_1.Engine2d(30);
@@ -44,6 +44,9 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
                     Input_1.input.onPressed(function (command) {
                         if (command === Input_1.InputAction.FIRE) {
                             _this.player.fire(_this.myBullet);
+                        }
+                        if (command === Input_1.InputAction.RESET) {
+                            _this.player.setProtect(5000);
                         }
                     });
                     Input_1.input.onReleased(function (command) {
@@ -59,7 +62,6 @@ System.register(["../engine/Engine2d", "./MapBuilder", "../engine/geometry/Rect"
                 BattleCity.prototype.reset = function () {
                     this.player = new Tank_1.default().spawn(new Point_1.default(160, 416));
                     this.myBullet = new Bullet_1.default();
-                    // walls
                     new Container_1.default(new Rect_1.Rect(0, 0, 480, 32)).fillColor('gray').setCollisionGroup('wall');
                     new Container_1.default(new Rect_1.Rect(0, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');
                     new Container_1.default(new Rect_1.Rect(448, 0, 32, 480)).fillColor('gray').setCollisionGroup('wall');

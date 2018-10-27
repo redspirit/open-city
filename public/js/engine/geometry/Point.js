@@ -9,7 +9,7 @@ System.register(["./Rect"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            Point = /** @class */ (function () {
+            Point = (function () {
                 function Point(x, y, extra) {
                     if (extra === void 0) { extra = 0; }
                     this.x = x;

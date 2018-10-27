@@ -129,6 +129,32 @@
         {"name": "right", "frames": [3]}
       ],
       "scale": 2
+    },
+    {
+      "id": "star",
+      "bitmap": "tanks",
+      "rects": [
+        [32, 256, 16, 16],
+        [48, 256, 16, 16],
+        [64, 256, 16, 16],
+        [80, 256, 16, 16]
+      ],
+      "states": [
+        {"name": "flash", "frames": [0,1,2,3,2,1], "speed": 3}
+      ],
+      "scale": 2
+    },
+    {
+      "id": "protect",
+      "bitmap": "tanks",
+      "rects": [
+        [96, 256, 16, 16],
+        [112, 256, 16, 16]
+      ],
+      "states": [
+        {"name": "enable", "frames": [0,1], "speed": 1}
+      ],
+      "scale": 2
     }
   ]
 }

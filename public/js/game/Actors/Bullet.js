@@ -38,7 +38,7 @@ System.register(["../../engine/Container", "../../engine/geometry/Rect", "../../
                 TankDirection[TankDirection["RIGHT"] = 3] = "RIGHT";
                 TankDirection[TankDirection["STAY"] = 4] = "STAY";
             })(TankDirection || (TankDirection = {}));
-            Bullet = /** @class */ (function (_super) {
+            Bullet = (function (_super) {
                 __extends(Bullet, _super);
                 function Bullet() {
                     var _this = _super.call(this, new Rect_1.Rect(0, 0, 8, 8)) || this;

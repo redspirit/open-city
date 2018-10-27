@@ -18,7 +18,7 @@ System.register(["../engine/Container", "../engine/geometry/Rect", "../engine/ge
             }
         ],
         execute: function () {
-            MapBuilder = /** @class */ (function () {
+            MapBuilder = (function () {
                 function MapBuilder() {
                 }
                 MapBuilder.prototype.buildFromFile = function (url) {

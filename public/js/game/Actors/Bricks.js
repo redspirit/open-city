@@ -39,12 +39,11 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
             sides[Rect_1.RectSide.RIGHT] = [[Part.TopRight, Part.BottomRight], [Part.TopLeft, Part.BottomLeft]];
             sides[Rect_1.RectSide.BOTTOM] = [[Part.BottomLeft, Part.BottomRight], [Part.TopLeft, Part.TopRight]];
             sides[Rect_1.RectSide.LEFT] = [[Part.TopLeft, Part.BottomLeft], [Part.TopRight, Part.BottomRight]];
-            Bricks = /** @class */ (function (_super) {
+            Bricks = (function (_super) {
                 __extends(Bricks, _super);
                 function Bricks(p) {
                     var _this = _super.call(this, p.toRect(16, 16)) || this;
                     _this.parts = [];
-                    //this.rect
                     _this.addSprite(1, 'bricks', []).setCollisionGroup('bricks');
                     _this.parts[Part.TopLeft] = true;
                     _this.parts[Part.TopRight] = true;
@@ -74,7 +73,6 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                 Bricks.prototype.hit = function (tank) {
                     var center = tank.rect.getCenter();
                     var side = this.rect.getSizeByTarget(center);
-                    console.log('HIT', side);
                     var curSide = sides[side];
                     if (this.parts[curSide[0][0]] || this.parts[curSide[0][1]]) {
                         this.parts[curSide[0][0]] = false;

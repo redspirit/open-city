@@ -9,7 +9,7 @@ System.register(["./Engine2d"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            Containers = /** @class */ (function () {
+            Containers = (function () {
                 function Containers() {
                     this.containers = [];
                 }
@@ -106,12 +106,7 @@ System.register(["./Engine2d"], function (exports_1, context_1) {
                             viewPortX = (container.rect.w - pos.x) / sprite.scale;
                             viewPortY = (container.rect.h - pos.y) / sprite.scale;
                         }
-                        // console.log('>>>>>>>>', rect);
-                        scene.ctx.drawImage(sprite.img, rect.x, // source x
-                        rect.y, // source y
-                        Math.min(rect.w, viewPortX), // sprite w
-                        Math.min(rect.h, viewPortY), // sprite h
-                        pos.x + container.rect.x, pos.y + container.rect.y, Math.min(rect.w, viewPortX) * sprite.scale, Math.min(rect.h, viewPortY) * sprite.scale);
+                        scene.ctx.drawImage(sprite.img, rect.x, rect.y, Math.min(rect.w, viewPortX), Math.min(rect.h, viewPortY), pos.x + container.rect.x, pos.y + container.rect.y, Math.min(rect.w, viewPortX) * sprite.scale, Math.min(rect.h, viewPortY) * sprite.scale);
                     });
                 };
                 return Containers;

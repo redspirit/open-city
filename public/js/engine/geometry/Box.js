@@ -9,7 +9,7 @@ System.register(["./Rect"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            Box = /** @class */ (function () {
+            Box = (function () {
                 function Box(x, y, x2, y2) {
                     this.x = x;
                     this.y = y;

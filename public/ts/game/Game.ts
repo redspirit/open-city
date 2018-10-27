@@ -32,6 +32,10 @@ export default class BattleCity{
                 this.player.fire(this.myBullet);
             }
 
+            if(command === InputAction.RESET) {
+                this.player.setProtect(5000);
+            }
+
         });
         input.onReleased(function (command:InputAction) {
 

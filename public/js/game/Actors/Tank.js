@@ -13,7 +13,7 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
         };
     })();
-    var Container_1, Point_1, Rect_1, Engine2d_1, Input_1, Utils_1, TankDirection, Tank;
+    var Container_1, Point_1, Rect_1, Engine2d_1, Input_1, Utils_1, TankDirection, TankMode, Tank;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -44,32 +44,50 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                 TankDirection[TankDirection["RIGHT"] = 3] = "RIGHT";
                 TankDirection[TankDirection["STAY"] = 4] = "STAY";
             })(TankDirection || (TankDirection = {}));
-            Tank = /** @class */ (function (_super) {
+            (function (TankMode) {
+                TankMode[TankMode["SPAWNING"] = 0] = "SPAWNING";
+                TankMode[TankMode["ACTIVE"] = 1] = "ACTIVE";
+                TankMode[TankMode["PROTECTED"] = 2] = "PROTECTED";
+            })(TankMode || (TankMode = {}));
+            Tank = (function (_super) {
                 __extends(Tank, _super);
                 function Tank() {
                     var _this = _super.call(this, new Rect_1.Rect(0, 0, 32, 32)) || this;
-                    // private pos: Point;
                     _this.speed = 2.5;
                     _this.direction = TankDirection.UP;
-                    // this.pos = new Point(0,0);
+                    _this.mode = TankMode.SPAWNING;
                     _this.addSprite(1, 'tank_1', [new Point_1.default(0, 0)])
                         .spriteState(1, 'up', Engine2d_1.AnimationType.STATIC)
+                        .spriteVisible(1, false)
+                        .addSprite(2, 'star', [new Point_1.default(0, 0)])
+                        .spriteState(2, 'flash', Engine2d_1.AnimationType.ANIMATE_REPEAT)
+                        .spriteVisible(2, false)
+                        .addSprite(3, 'protect', [new Point_1.default(0, 0)])
+                        .spriteState(3, 'enable', Engine2d_1.AnimationType.ANIMATE_REPEAT)
+                        .spriteVisible(3, false)
                         .setCollisionGroup('player1')
                         .setZIndex(10)
                         .setVisible(false);
                     return _this;
                 }
                 Tank.prototype.spawn = function (start) {
-                    // this.pos = start;
+                    var _this = this;
                     this.setPosition(start);
                     this.setVisible(true);
+                    this.mode = TankMode.SPAWNING;
+                    this.spriteVisible(2, true);
+                    setTimeout(function () {
+                        _this.spriteVisible(2, false).spriteVisible(1, true);
+                        _this.mode = TankMode.ACTIVE;
+                    }, 1000);
                     return this;
                 };
                 ;
                 Tank.prototype.fire = function (bullet) {
+                    if (this.mode === TankMode.SPAWNING)
+                        return this;
                     var offset = new Point_1.default(0, 0);
                     bullet.tank = this;
-                    // позиционируем пулю относительно танка
                     if (this.direction === TankDirection.UP) {
                         offset.x = 12;
                         offset.y = 0;
@@ -90,7 +108,20 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                     return this;
                 };
                 ;
+                Tank.prototype.setProtect = function (timeout) {
+                    var _this = this;
+                    console.log('Protected!', timeout);
+                    this.spriteVisible(3, true);
+                    this.mode = TankMode.PROTECTED;
+                    setTimeout(function () {
+                        _this.spriteVisible(3, false);
+                        _this.mode = TankMode.ACTIVE;
+                    }, timeout);
+                    return this;
+                };
                 Tank.prototype.update = function () {
+                    if (this.mode === TankMode.SPAWNING)
+                        return;
                     var oldPos = this.rect.toPoint();
                     var dir;
                     var oldDirection = this.direction;
@@ -128,13 +159,11 @@ System.register(["../../engine/Container", "../../engine/geometry/Point", "../..
                         this.rect.x += this.speed;
                     if ((oldDirection === TankDirection.UP || oldDirection === TankDirection.DOWN)
                         && (this.direction === TankDirection.LEFT || this.direction === TankDirection.RIGHT)) {
-                        // to horizontal
                         this.rect.y = Utils_1.default.snapToGrid(this.rect.y, 16);
                         oldPos.y = this.rect.y;
                     }
                     if ((oldDirection === TankDirection.LEFT || oldDirection === TankDirection.RIGHT)
                         && (this.direction === TankDirection.UP || this.direction === TankDirection.DOWN)) {
-                        // to vertical
                         this.rect.x = Utils_1.default.snapToGrid(this.rect.x, 16);
                         oldPos.x = this.rect.x;
                     }

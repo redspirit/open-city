@@ -7,21 +7,28 @@ import Utils from "../../engine/geometry/Utils";
 import Bullet from "./Bullet";
 
 enum TankDirection {UP, DOWN, LEFT, RIGHT, STAY}
+enum TankMode {SPAWNING, ACTIVE, PROTECTED}
 
 export default class Tank extends Container{
 
     // private pos: Point;
     private speed:number = 2.5;
     private direction: TankDirection = TankDirection.UP;
+    private mode: TankMode = TankMode.SPAWNING;
 
     constructor() {
 
         super(new Rect(0,0,32,32));
-        
-        // this.pos = new Point(0,0);
 
         this.addSprite(1, 'tank_1', [new Point(0,0)])
             .spriteState(1, 'up', AnimationType.STATIC)
+            .spriteVisible(1, false)
+            .addSprite(2, 'star', [new Point(0,0)])
+            .spriteState(2, 'flash', AnimationType.ANIMATE_REPEAT)
+            .spriteVisible(2, false)
+            .addSprite(3, 'protect', [new Point(0,0)])
+            .spriteState(3, 'enable', AnimationType.ANIMATE_REPEAT)
+            .spriteVisible(3, false)
             .setCollisionGroup('player1')
             .setZIndex(10)
             .setVisible(false);
@@ -29,13 +36,24 @@ export default class Tank extends Container{
     }
 
     public spawn(start: Point):Tank {
-        // this.pos = start;
+
         this.setPosition(start);
         this.setVisible(true);
+        this.mode = TankMode.SPAWNING;
+        this.spriteVisible(2, true);
+
+        setTimeout(() => {
+            this.spriteVisible(2, false).spriteVisible(1, true);
+            this.mode = TankMode.ACTIVE;
+        }, 1000);
+
         return this;
     };
 
     public fire(bullet:Bullet):Tank {
+
+        if(this.mode === TankMode.SPAWNING)
+            return this;
 
         let offset:Point = new Point(0,0);
         bullet.tank = this;
@@ -52,8 +70,26 @@ export default class Tank extends Container{
 
     };
 
+    public setProtect(timeout:number):Tank {
+
+        console.log('Protected!', timeout);
+
+        this.spriteVisible(3, true);
+        this.mode = TankMode.PROTECTED;
+
+        setTimeout(() => {
+            this.spriteVisible(3, false);
+            this.mode = TankMode.ACTIVE;
+
+        }, timeout);
+
+        return this;
+    }
 
     public update():void {
+
+        if(this.mode === TankMode.SPAWNING)
+            return;
 
         let oldPos:Point = this.rect.toPoint();
         let dir:TankDirection;

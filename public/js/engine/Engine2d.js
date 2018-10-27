@@ -19,7 +19,7 @@ System.register(["./Loader", "./Containers"], function (exports_1, context_1) {
                 AnimationType[AnimationType["ANIMATE_TO_HIDE"] = 3] = "ANIMATE_TO_HIDE";
             })(AnimationType || (AnimationType = {}));
             exports_1("AnimationType", AnimationType);
-            State = /** @class */ (function () {
+            State = (function () {
                 function State(name, frames, speed) {
                     if (name === void 0) { name = ''; }
                     if (frames === void 0) { frames = []; }
@@ -31,11 +31,9 @@ System.register(["./Loader", "./Containers"], function (exports_1, context_1) {
                 return State;
             }());
             exports_1("State", State);
-            Engine2d = /** @class */ (function () {
+            Engine2d = (function () {
                 function Engine2d(fps) {
-                    // resources properties
                     this.resourcesLoaded = false;
-                    // scene
                     this.scene = {};
                     this.fpsInterval = 1000 / fps;
                     this.animThen = Date.now();

@@ -15,7 +15,7 @@ System.register(["./Loader", "./geometry/Rect", "./Engine2d"], function (exports
             }
         ],
         execute: function () {
-            Sprite = /** @class */ (function () {
+            Sprite = (function () {
                 function Sprite(spriteId) {
                     var _this = this;
                     this.id = '';

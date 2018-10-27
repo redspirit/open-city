@@ -15,7 +15,7 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
             }
         ],
         execute: function () {
-            Container = /** @class */ (function () {
+            Container = (function () {
                 function Container(rect, insertToList) {
                     if (insertToList === void 0) { insertToList = true; }
                     this.name = '';
@@ -23,7 +23,7 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     this.index = 0;
                     this.color = '';
                     this.sprites = {};
-                    this.overflow = false; // скрыть ли все спрайты за пределом контейнера (w, h)
+                    this.overflow = false;
                     this.collisionGroup = '';
                     this.zIndex = 0;
                     this.rect = rect;
@@ -38,9 +38,6 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                     this.name = name;
                     return this;
                 };
-                // this.getParent = function () {
-                //     return this.parent;
-                // }
                 Container.prototype.addSprite = function (id, spriteName, positions) {
                     var sprite = new Sprite_1.default(spriteName);
                     sprite.setPositions(positions);
@@ -123,7 +120,6 @@ System.register(["./Sprite", "./Engine2d", "./Containers"], function (exports_1,
                 };
                 ;
                 Container.prototype.changeSize = function (innerRect) {
-                    // изменить размер контернера указав внутренний бокс
                     var _this = this;
                     this.rect.x += innerRect.x;
                     this.rect.y += innerRect.y;

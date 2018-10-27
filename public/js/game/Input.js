@@ -15,7 +15,7 @@ System.register([], function (exports_1, context_1) {
                 InputAction[InputAction["RESET"] = 6] = "RESET";
             })(InputAction || (InputAction = {}));
             exports_1("InputAction", InputAction);
-            Input = /** @class */ (function () {
+            Input = (function () {
                 function Input() {
                     var _this = this;
                     this.statuses = [];

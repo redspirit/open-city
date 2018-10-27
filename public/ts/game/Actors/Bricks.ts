@@ -53,8 +53,6 @@ export default class Bricks extends Container {
         let center:Point = tank.rect.getCenter();
         let side:RectSide = this.rect.getSizeByTarget(center);
 
-        console.log('HIT', side);
-
         let curSide:any = sides[side];
 
         if(this.parts[curSide[0][0]] || this.parts[curSide[0][1]]) {
