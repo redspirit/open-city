@@ -1,11 +1,13 @@
 
 import BattleCity from "./game/Game"
 import {InputAction} from "./game/Input";
+import Client from "./net/client";
+let client = new Client();
 
 // sprite editor https://www.piskelapp.com
 
-
 let game = new BattleCity(document.getElementById('canvas'));
+
 
 // set buttons
 game.inputAssign(38, InputAction.UP);

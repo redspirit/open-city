@@ -1,0 +1,13 @@
+{
+  "http": {
+    "port": 3010
+  },
+  "mongo": {
+    "host": "85.21.168.162",
+    "port": 27017,
+    "database": "tanki",
+    "autoIndex": false,
+    "user": "tanki",
+    "password": "-"
+  }
+}

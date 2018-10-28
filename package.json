@@ -17,6 +17,19 @@
   },
   "homepage": "https://github.com/redspirit/open-city#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cookie": "^0.3.1",
+    "cookie-parser": "^1.4.3",
+    "deferred": "^0.7.9",
+    "events": "^3.0.0",
+    "express": "^4.16.4",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "minimist": "^1.2.0",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.7",
+    "socket.io": "^2.1.1",
+    "underscore": "^1.9.1"
   }
 }

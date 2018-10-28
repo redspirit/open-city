@@ -1,12 +1,19 @@
 
-const config = require('./congif');
-const express = require('express');
-const app = express();
 
-app.use(express.static(__dirname + '/public', {
-    index: 'index.html'
-}));
+const server = require('./modules/server');
+const dataset = require('./modules/dataset');
 
-app.listen(config.port, function () {
-    console.log('Server started on', config.port);
+process.on('unhandledRejection', (reason, p) => {
+    console.error('Unhandled Rejection:', p, 'reason:', reason);
+});
+
+dataset.then(() => {
+
+    // стартуем http-сервер только после установки связи с базой
+    try {
+        server.start();
+    } catch(err){
+        console.error("Server error:", err);
+    }
+
 });
