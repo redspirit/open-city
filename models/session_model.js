@@ -29,7 +29,6 @@ SessionSchema.statics.createOne = function (gamemode) {
         team2: [],
         gamemode: gamemode,
         created: new Date(),
-        started: new Date(),
         status: CONST.SessionStatus.WAITING
     });
     return session.save();
@@ -41,12 +40,17 @@ SessionSchema.methods.addPlayer = function(player) {
     // если свободных место больше не осталось то ставим статус CONST.SessionStatus.PREPARING
     // возвращаем сессиюё
 
-    // let f1 = this.team1.filter(function (item) {
-    //     return player._id.toString() === item._id.toString();
-    // })[0];
-    // let f2 = this.team2.filter(function (item) {
-    //     return player._id.toString() === item._id.toString();
-    // })[0];
+    let f1 = this.team1.filter(function (item) {
+        return player._id.toString() === item._id.toString();
+    })[0];
+    let f2 = this.team2.filter(function (item) {
+        return player._id.toString() === item._id.toString();
+    })[0];
+
+
+    if(f1 || f2) {
+        return this;
+    }
 
     if(this.team1.length === 0) {
 
@@ -56,8 +60,8 @@ SessionSchema.methods.addPlayer = function(player) {
 
     } else if(this.team2.length === 0) {
 
-        this.team1.push(player._id);
-        this.markModified('team1');
+        this.team2.push(player._id);
+        this.markModified('team2');
         this.status = CONST.SessionStatus.PREPARING;
         return this.save();
 
@@ -86,7 +90,6 @@ SessionSchema.statics.prepare = function(player) {
         });
 
     });
-
 
 };
 

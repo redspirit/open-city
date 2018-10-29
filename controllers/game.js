@@ -39,15 +39,19 @@ router.post('/join', function (req, res){
 
     let playerId = req.body.player;
 
+    if(!mongoose.Types.ObjectId.isValid(playerId)) {
+        return res.send({error: 'invalid_player'});
+    }
+
+
     Player.getById(playerId).then(function (player) {
         if(!player)
             return res.send({error: 'wrong_player'});
 
-        Session.prepare(player).then();
+        Session.prepare(player).then(function (session) {
+            res.send(session);
+        });
     });
-
-
-
 
 });
 
