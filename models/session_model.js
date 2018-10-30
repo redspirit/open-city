@@ -36,9 +36,6 @@ SessionSchema.statics.createOne = function (gamemode) {
 
 SessionSchema.methods.addPlayer = function(player) {
 
-    // находим свободное место для игрока и добавляем его туда
-    // если свободных место больше не осталось то ставим статус CONST.SessionStatus.PREPARING
-    // возвращаем сессиюё
 
     let f1 = this.team1.filter(function (item) {
         return player._id.toString() === item._id.toString();
@@ -46,7 +43,6 @@ SessionSchema.methods.addPlayer = function(player) {
     let f2 = this.team2.filter(function (item) {
         return player._id.toString() === item._id.toString();
     })[0];
-
 
     if(f1 || f2) {
         return this;
@@ -83,7 +79,7 @@ SessionSchema.statics.prepare = function(player) {
 
     return this.findOne({status: CONST.SessionStatus.WAITING}).then((session) => {
         if(session)
-            return session;
+            return session.addPlayer(player);
 
         return this.createOne(1).then((session) => {
             return session.addPlayer(player);

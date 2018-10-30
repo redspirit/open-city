@@ -8,7 +8,14 @@ export default class Client {
 
     constructor() {
 
-        this.socket = io.connect('',{ query: "id=1234567" });
+
+
+
+    }
+
+    public connect(id:string) {
+
+        this.socket = io.connect('',{ query: "id=" + id });
 
         this.socket.on('connect', () => {
 
@@ -16,6 +23,11 @@ export default class Client {
 
         });
 
+        this.socket.on('disconnect', () => {
+
+            console.log('Socket DISconnected');
+
+        });
 
     }
 

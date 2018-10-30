@@ -3,33 +3,27 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>OpenCity</title>
+    <title>OpenCity Multiplayer</title>
     <link rel="stylesheet" type="text/css" href="./css/opencity.css">
 </head>
 
 <body>
 
     <div class="wrapper">
-        <div class="main">
-            <div class="game-stats" id="game-stats">
-                <div class="row">
-                    <div>SCORE<br /><span id="score">0</span></div>
-                    <div style="text-align:center;" class="game-over-display">GAME<br />OVER</div>
-                    <div style="text-align:right;">TANKS<br /><span id="respawn-count">0</span></div>
-                </div>
-            </div>
-            <div><canvas id="canvas" width="480" height="480"></canvas></div>
-        </div>
-        <div class="side">
-            <h4>Управление:</h4>
-            <ul>
-                <li>Стрелочки: Движение</li>
-                <li>Пробел: Стрелять</li>
-                <!--<li>P: Pause</li>-->
-                <!--<li>R: Game Reset</li>-->
-            </ul>
 
+        <div class="logo">
+            <img src="/images/logo.png" alt="">
         </div>
+
+        <div class="login-form">
+            <form action="">
+                <input type="text" id="login-name" class="login-input" placeholder="Имя">
+                <input type="password" id="login-password" class="login-input" placeholder="Пароль">
+                <input type="button" id="login-button" value="Войти" class="button">
+            </form>
+            <div class="annotation">Если вы новый пользователь, то будете зарегистрированны с указанным паролем</div>
+        </div>
+
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -42,9 +36,6 @@
             }
         });
         System.import("app.js");
-        // System.import('/js/app.js').then(function (m) {
-        //     m.start()
-        // });
     </script>
 
 </body>
