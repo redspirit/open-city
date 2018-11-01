@@ -1,15 +1,15 @@
-System.register(["./Web"], function (exports_1, context_1) {
+System.register(["./web"], function (exports_1, context_1) {
     "use strict";
-    var Web_1, web;
+    var web_1;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
-            function (Web_1_1) {
-                Web_1 = Web_1_1;
+            function (web_1_1) {
+                web_1 = web_1_1;
             }
         ],
         execute: function () {
-            web = new Web_1.default();
+            web_1.test();
         }
     };
 });

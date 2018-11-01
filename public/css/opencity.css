@@ -17,6 +17,10 @@ body {
     color: #eaeaea;
 }
 
+.hide {
+    display: none;
+}
+
 .wrapper {
     margin: auto;
     width: 900px;
@@ -56,4 +60,21 @@ body {
     font-size: 18px;
     background-color: #b1b1b1;
     cursor: pointer;
+}
+
+.go-game-button {
+    text-align: center;
+}
+.go-game-button > div{
+    cursor: pointer;
+    background-color: #b1b1b1;
+    width: 200px;
+    padding: 16px;
+    font-size: 22px;
+    display: inline-block;
+    color: black;
+    margin-top: 100px;
+}
+.go-game-button > div:hover{
+    background-color: #d2d2d2;
 }

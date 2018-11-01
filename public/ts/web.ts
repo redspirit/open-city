@@ -2,7 +2,6 @@
 import Client from "./net/client";
 let client = new Client();
 
-
 class HTTP {
 
     static get(url:string, callback:any) {
@@ -39,7 +38,12 @@ class Player {
 
     constructor() {
 
-        this.localRestore();
+
+        // restore from name and pass
+        let userData = web.restoreParams();
+        if(userData.name && userData.pass) {
+            this.login(userData.name, userData.pass);
+        }
 
     }
 
@@ -70,28 +74,12 @@ class Player {
 
             client.connect(this.id);
 
-            this.localSave();
+            web.saveParams(this.name, this.pass);
+            web.loginFormVisible(false);
 
             callback && callback(data);
 
         });
-
-    }
-
-    localSave():void {
-        if(!this.isAuth) return;
-        localStorage.setItem('player_name', this.name);
-        localStorage.setItem('player_pass', this.pass);
-    }
-
-    localRestore():void {
-        let name:string = localStorage.getItem('player_name') as string;
-        let pass:string = localStorage.getItem('player_pass') as string;
-
-        if(!name || !pass) return;
-
-        this.login(name, pass);
-        console.log('Login from local');
 
     }
 
@@ -113,9 +101,7 @@ class Player {
 
 }
 
-let player:Player = new Player();
-
-export default class Web {
+class Web {
 
 
     constructor() {
@@ -149,10 +135,36 @@ export default class Web {
 
     }
 
+    loginFormVisible(visible:boolean):void {
+        let classes:DOMTokenList = (document.querySelector('.login-form') as HTMLInputElement).classList;
+        if(visible) {
+            classes.remove('hide');
+        } else {
+            classes.add('hide');
+        }
+    }
+
+    saveParams(name:string, pass:string):void {
+        localStorage.setItem('player_name', name);
+        localStorage.setItem('player_pass', pass);
+    }
+
+    restoreParams() {
+        return {
+            name: localStorage.getItem('player_name') as string,
+            pass: localStorage.getItem('player_pass') as string
+        };
+    }
 
 }
 
+let web:Web = new Web();
+let player:Player = new Player();
 
+
+export function test() {
+    console.log('Start');
+}
 
 
 

@@ -1,7 +1,11 @@
 System.register(["./net/client"], function (exports_1, context_1) {
     "use strict";
-    var client_1, client, HTTP, Player, player, Web;
+    var client_1, client, HTTP, Player, Web, web, player;
     var __moduleName = context_1 && context_1.id;
+    function test() {
+        console.log('Start');
+    }
+    exports_1("test", test);
     return {
         setters: [
             function (client_1_1) {
@@ -39,7 +43,10 @@ System.register(["./net/client"], function (exports_1, context_1) {
                     this.id = '';
                     this.isAuth = false;
                     this.isAdmin = false;
-                    this.localRestore();
+                    var userData = web.restoreParams();
+                    if (userData.name && userData.pass) {
+                        this.login(userData.name, userData.pass);
+                    }
                 }
                 Player.prototype.login = function (name, pass, callback) {
                     var _this = this;
@@ -61,23 +68,10 @@ System.register(["./net/client"], function (exports_1, context_1) {
                         _this.id = data._id;
                         _this.isAdmin = data.isAdmin;
                         client.connect(_this.id);
-                        _this.localSave();
+                        web.saveParams(_this.name, _this.pass);
+                        web.loginFormVisible(false);
                         callback && callback(data);
                     });
-                };
-                Player.prototype.localSave = function () {
-                    if (!this.isAuth)
-                        return;
-                    localStorage.setItem('player_name', this.name);
-                    localStorage.setItem('player_pass', this.pass);
-                };
-                Player.prototype.localRestore = function () {
-                    var name = localStorage.getItem('player_name');
-                    var pass = localStorage.getItem('player_pass');
-                    if (!name || !pass)
-                        return;
-                    this.login(name, pass);
-                    console.log('Login from local');
                 };
                 Player.prototype.join = function () {
                     if (!this.isAuth)
@@ -90,7 +84,6 @@ System.register(["./net/client"], function (exports_1, context_1) {
                 };
                 return Player;
             }());
-            player = new Player();
             Web = (function () {
                 function Web() {
                     var _this = this;
@@ -114,9 +107,29 @@ System.register(["./net/client"], function (exports_1, context_1) {
                         return alert('Надо указать пароль');
                     player.login(form.name, form.pass);
                 };
+                Web.prototype.loginFormVisible = function (visible) {
+                    var classes = document.querySelector('.login-form').classList;
+                    if (visible) {
+                        classes.remove('hide');
+                    }
+                    else {
+                        classes.add('hide');
+                    }
+                };
+                Web.prototype.saveParams = function (name, pass) {
+                    localStorage.setItem('player_name', name);
+                    localStorage.setItem('player_pass', pass);
+                };
+                Web.prototype.restoreParams = function () {
+                    return {
+                        name: localStorage.getItem('player_name'),
+                        pass: localStorage.getItem('player_pass')
+                    };
+                };
                 return Web;
             }());
-            exports_1("default", Web);
+            web = new Web();
+            player = new Player();
         }
     };
 });

@@ -2,18 +2,14 @@
 import BattleCity from "./game/Game"
 import {InputAction} from "./game/Input";
 
-import Web from "./Web";
-
-let web:Web = new Web();
+import {test} from "./web";
+test();
 
 // sprite editor https://www.piskelapp.com
 
 // let game = new BattleCity(document.getElementById('canvas'));
 
-
-
-
-
+// let z:Lala = new Lala();
 
 // set buttons
 // game.inputAssign(38, InputAction.UP);
