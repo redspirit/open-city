@@ -44,17 +44,21 @@ let start = () => {
     let Session = mongoose.model('Session');
     io.on('connection', function(socket){
 
-        // let data = cookie.parse(socket.handshake.headers.cookie);
-        // let accessToken = data.hic_access;
-
         let playerId = socket.handshake.query.id;
 
-        console.log('playerId', playerId);
+        Player.getById(playerId).then(function (player) {
+            if(!player) {
+                return socket.disconnect();
+            }
+            console.log('Connected player', player.name);
+            socket.join(playerId);
 
-        socket.join(playerId);
+            socket.player = player;
 
-        socket.on('disconnect', function(){
-            console.log('user disconnected');
+            socket.on('disconnect', function(){
+                events.emit('disconnect', socket);
+            });
+
         });
 
     });

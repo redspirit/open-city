@@ -8,11 +8,11 @@ const Schema = mongoose.Schema;
 const SessionSchema = new Schema({
     team1: [{
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Player'
     }],
     team2: [{
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Player'
     }],
     created: Date,
     started: Date,
@@ -86,6 +86,35 @@ SessionSchema.statics.prepare = function(player) {
         });
 
     });
+
+};
+
+SessionSchema.statics.removePlayer = function(player) {
+
+    let query = {
+        status: {
+            $in: [CONST.SessionStatus.WAITING, CONST.SessionStatus.PREPARING, CONST.SessionStatus.GAME]
+        },
+        $or: [
+            {team1: player._id},
+            {team2: player._id}
+        ]
+    };
+
+    return this.find(query).then((sessions) => {
+        _.each(sessions, function (session) {
+            session.team1 = _.filter(session.team1, function (item) {
+                return !item.equals(player._id);
+            });
+            session.team2 = _.filter(session.team2, function (item) {
+                return !item.equals(player._id);
+            });
+            session.markModified('team1');
+            session.markModified('team2');
+            session.save();
+        });
+        return true;
+    })
 
 };
 

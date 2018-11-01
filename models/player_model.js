@@ -34,6 +34,10 @@ PlayerSchema.statics.createNew = function (name, pass) {
 
 };
 
+PlayerSchema.methods.toPublic = function () {
+    return _.pick(this, ['_id', 'name', 'is_admin', 'status']);
+};
+
 PlayerSchema.statics.getById = function (id) {
     return this.findById(id);
 };

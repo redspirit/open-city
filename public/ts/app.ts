@@ -9,8 +9,6 @@ test();
 
 // let game = new BattleCity(document.getElementById('canvas'));
 
-// let z:Lala = new Lala();
-
 // set buttons
 // game.inputAssign(38, InputAction.UP);
 // game.inputAssign(40, InputAction.DOWN);

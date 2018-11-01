@@ -69,7 +69,7 @@ System.register(["./net/client"], function (exports_1, context_1) {
                         _this.isAdmin = data.isAdmin;
                         client.connect(_this.id);
                         web.saveParams(_this.name, _this.pass);
-                        web.loginFormVisible(false);
+                        web.elementVisible('.login-form', false);
                         callback && callback(data);
                     });
                 };
@@ -90,6 +90,9 @@ System.register(["./net/client"], function (exports_1, context_1) {
                     document.querySelector('#login-button').onclick = function () {
                         _this.onClickLoginButton();
                     };
+                    document.querySelector('.go-game-button').onclick = function () {
+                        _this.onClickJoin();
+                    };
                 }
                 Web.prototype.getNamePass = function () {
                     var name = document.querySelector('#login-name').value;
@@ -107,8 +110,11 @@ System.register(["./net/client"], function (exports_1, context_1) {
                         return alert('Надо указать пароль');
                     player.login(form.name, form.pass);
                 };
-                Web.prototype.loginFormVisible = function (visible) {
-                    var classes = document.querySelector('.login-form').classList;
+                Web.prototype.onClickJoin = function () {
+                    player.join();
+                };
+                Web.prototype.elementVisible = function (elem, visible) {
+                    var classes = document.querySelector(elem).classList;
                     if (visible) {
                         classes.remove('hide');
                     }

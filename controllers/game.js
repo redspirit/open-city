@@ -1,6 +1,8 @@
+const _ = require('underscore');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const events = require('../modules/events');
 let Player = mongoose.model('Player');
 let Session = mongoose.model('Session');
 
@@ -49,10 +51,26 @@ router.post('/join', function (req, res){
             return res.send({error: 'wrong_player'});
 
         Session.prepare(player).then(function (session) {
-            res.send(session);
+
+            session.populate(['team1', 'team2'], function (err, popSession) {
+                if(err) console.error(err);
+                popSession.team1 = _.map(popSession.team1, function (item) {
+                    return item.toPublic();
+                });
+                popSession.team2 = _.map(popSession.team2, function (item) {
+                    return item.toPublic();
+                });
+                res.send(popSession);
+            });
+
         });
     });
 
+});
+
+events.on('disconnect', function (socket) {
+    console.log('Player disconnected', socket.player.name);
+    Session.removePlayer(socket.player);
 });
 
 

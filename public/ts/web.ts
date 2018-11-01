@@ -75,7 +75,8 @@ class Player {
             client.connect(this.id);
 
             web.saveParams(this.name, this.pass);
-            web.loginFormVisible(false);
+            web.elementVisible('.login-form', false);
+            // web.elementVisible('.go-game-button', true);
 
             callback && callback(data);
 
@@ -86,7 +87,6 @@ class Player {
     join() {
         if(!this.isAuth)
             return false;
-
 
         HTTP.post('/api/game/join', {player: this.id}, (session:any) => {
 
@@ -108,6 +108,9 @@ class Web {
 
         (document.querySelector('#login-button') as HTMLInputElement).onclick = () => {
             this.onClickLoginButton();
+        }
+        (document.querySelector('.go-game-button') as HTMLInputElement).onclick = () => {
+            this.onClickJoin();
         }
 
     }
@@ -135,8 +138,14 @@ class Web {
 
     }
 
-    loginFormVisible(visible:boolean):void {
-        let classes:DOMTokenList = (document.querySelector('.login-form') as HTMLInputElement).classList;
+    public onClickJoin() {
+
+        player.join();
+
+    }
+
+    public elementVisible(elem:string, visible:boolean):void {
+        let classes:DOMTokenList = (document.querySelector(elem) as HTMLInputElement).classList;
         if(visible) {
             classes.remove('hide');
         } else {
