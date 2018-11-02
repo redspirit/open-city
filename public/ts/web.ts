@@ -167,9 +167,91 @@ class Web {
 
 }
 
+class WebComponents {
+
+    private data:any;
+    private generedElements:any[] = [];
+    private replacedElements:any[] = [];
+
+    constructor() {
+
+        let elements = document.querySelectorAll('[data-repeat]');
+        [].forEach.call(elements, (container:any) => {
+            container.remove();
+            this.replacedElements.push({
+                el: container,
+                name: 'data-repeat',
+                value: container.getAttribute('data-text')
+            });
+        });
+
+    }
+
+    public setData(_data:any) {
+        this.data = _data;
+        this.refresh();
+    }
+
+    private refresh() {
+
+        this.replacedElements.forEach((item) => {
+            if(item.name == 'data-repeat') {
+                this.dataRepeat(item);
+            }
+        });
+
+        // let _index = -1;
+        // let dataTexts = container.querySelectorAll('[data-text]');
+        // [].forEach.call(dataTexts, (dataText:any) => {
+        //     _index++;
+        //
+        //     let attr:string = dataText.getAttribute('data-text');
+        //     if(attr === '$index') {
+        //         dataText.innerHTML = _index;
+        //     }
+        //
+        // });
+
+    }
+
+    private insertAfter(elem:any, refElem:any) {
+        return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+    }
+
+    private dataRepeat(item:any) {
+
+        if(item.value in this.data && this.data[item.value] instanceof Array) {
+
+            let thisData = this.data[item.value];
+
+            for(let i:number = 0; i <= thisData.length; i++) {
+                let itemData = thisData[i];
+                let newContainer = container.cloneNode(true);
+                newContainer.removeAttribute('data-repeat');
+                this.insertAfter(newContainer, container);
+                this.dataRepeatItem(newContainer, itemData);
+                container = newContainer;
+            }
+        }
+    }
+
+    private dataRepeatItem(container:any, data:any) {
+
+    }
+
+
+
+}
+
+
 let web:Web = new Web();
 let player:Player = new Player();
+let webComponents:WebComponents = new WebComponents();
 
+webComponents.setData({
+    team1Collection: [{name: 'one'},{name: 'two'},{name: 'three'}],
+    team2Collection: []
+});
 
 export function test() {
     console.log('Start');

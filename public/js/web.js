@@ -1,6 +1,6 @@
 System.register(["./net/client"], function (exports_1, context_1) {
     "use strict";
-    var client_1, client, HTTP, Player, Web, web, player;
+    var client_1, client, HTTP, Player, Web, WebComponents, web, player, webComponents;
     var __moduleName = context_1 && context_1.id;
     function test() {
         console.log('Start');
@@ -134,8 +134,60 @@ System.register(["./net/client"], function (exports_1, context_1) {
                 };
                 return Web;
             }());
+            WebComponents = (function () {
+                function WebComponents() {
+                    var _this = this;
+                    this.generedElements = [];
+                    this.replacedElements = [];
+                    var elements = document.querySelectorAll('[data-repeat]');
+                    [].forEach.call(elements, function (container) {
+                        container.remove();
+                        _this.replacedElements.push({
+                            el: container,
+                            name: 'data-repeat',
+                            value: container.getAttribute('data-text')
+                        });
+                    });
+                }
+                WebComponents.prototype.setData = function (_data) {
+                    this.data = _data;
+                    this.refresh();
+                };
+                WebComponents.prototype.refresh = function () {
+                    var _this = this;
+                    this.replacedElements.forEach(function (item) {
+                        if (item.name == 'data-repeat') {
+                            _this.dataRepeat(item);
+                        }
+                    });
+                };
+                WebComponents.prototype.insertAfter = function (elem, refElem) {
+                    return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+                };
+                WebComponents.prototype.dataRepeat = function (item) {
+                    if (item.value in this.data && this.data[item.value] instanceof Array) {
+                        var thisData = this.data[item.value];
+                        for (var i = 0; i <= thisData.length; i++) {
+                            var itemData = thisData[i];
+                            var newContainer = container.cloneNode(true);
+                            newContainer.removeAttribute('data-repeat');
+                            this.insertAfter(newContainer, container);
+                            this.dataRepeatItem(newContainer, itemData);
+                            container = newContainer;
+                        }
+                    }
+                };
+                WebComponents.prototype.dataRepeatItem = function (container, data) {
+                };
+                return WebComponents;
+            }());
             web = new Web();
             player = new Player();
+            webComponents = new WebComponents();
+            webComponents.setData({
+                team1Collection: [{ name: 'one' }, { name: 'two' }, { name: 'three' }],
+                team2Collection: []
+            });
         }
     };
 });
