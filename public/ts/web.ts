@@ -108,7 +108,7 @@ class Web {
 
         (document.querySelector('#login-button') as HTMLInputElement).onclick = () => {
             this.onClickLoginButton();
-        }
+        };
         (document.querySelector('.go-game-button') as HTMLInputElement).onclick = () => {
             this.onClickJoin();
         }
@@ -170,19 +170,28 @@ class Web {
 class WebComponents {
 
     private data:any;
-    private generedElements:any[] = [];
-    private replacedElements:any[] = [];
+    private components:any[] = [];
 
     constructor() {
 
         let elements = document.querySelectorAll('[data-repeat]');
         [].forEach.call(elements, (container:any) => {
-            container.remove();
-            this.replacedElements.push({
-                el: container,
-                name: 'data-repeat',
-                value: container.getAttribute('data-text')
-            });
+
+
+            //console.log(container.firstChild);
+
+            let tmpChild = container.firstElementChild;
+            container.firstChild.remove();
+
+            let item = {
+                type: 'repeat',
+                container: container,
+                template: tmpChild,
+                dataKey: container.getAttribute('data-repeat')
+            };
+
+            this.components.push(item);
+
         });
 
     }
@@ -194,23 +203,11 @@ class WebComponents {
 
     private refresh() {
 
-        this.replacedElements.forEach((item) => {
-            if(item.name == 'data-repeat') {
+        this.components.forEach((item) => {
+            if(item.type === 'repeat') {
                 this.dataRepeat(item);
             }
         });
-
-        // let _index = -1;
-        // let dataTexts = container.querySelectorAll('[data-text]');
-        // [].forEach.call(dataTexts, (dataText:any) => {
-        //     _index++;
-        //
-        //     let attr:string = dataText.getAttribute('data-text');
-        //     if(attr === '$index') {
-        //         dataText.innerHTML = _index;
-        //     }
-        //
-        // });
 
     }
 
@@ -219,26 +216,35 @@ class WebComponents {
     }
 
     private dataRepeat(item:any) {
+        // обрабатываем один контейнер для коллекции
 
-        if(item.value in this.data && this.data[item.value] instanceof Array) {
+        console.log(item);
 
-            let thisData = this.data[item.value];
+        item.container.innerHTML = '';
 
-            for(let i:number = 0; i <= thisData.length; i++) {
-                let itemData = thisData[i];
-                let newContainer = container.cloneNode(true);
-                newContainer.removeAttribute('data-repeat');
-                this.insertAfter(newContainer, container);
-                this.dataRepeatItem(newContainer, itemData);
-                container = newContainer;
-            }
+
+        if(item.dataKey in this.data && this.data[item.dataKey] instanceof Array) {
+
+            let thisData: [any] = this.data[item.dataKey];
+
+            let index = -1;
+            thisData.forEach((itemData:any) => {
+                index++;
+                let newItemElement = item.template.cloneNode(true);
+                let dataTexts = newItemElement.querySelectorAll('[data-text]');
+                [].forEach.call(dataTexts, (dataText:any) => {
+                    let attr:string = dataText.getAttribute('data-text');
+                    if(attr === '$index') {
+                        dataText.innerHTML = index;
+                    } else {
+                        dataText.innerHTML = itemData[attr];
+                    }
+                });
+                item.container.appendChild(newItemElement);
+            });
+
         }
     }
-
-    private dataRepeatItem(container:any, data:any) {
-
-    }
-
 
 
 }

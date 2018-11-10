@@ -137,16 +137,18 @@ System.register(["./net/client"], function (exports_1, context_1) {
             WebComponents = (function () {
                 function WebComponents() {
                     var _this = this;
-                    this.generedElements = [];
-                    this.replacedElements = [];
+                    this.components = [];
                     var elements = document.querySelectorAll('[data-repeat]');
                     [].forEach.call(elements, function (container) {
-                        container.remove();
-                        _this.replacedElements.push({
-                            el: container,
-                            name: 'data-repeat',
-                            value: container.getAttribute('data-text')
-                        });
+                        var tmpChild = container.firstElementChild;
+                        container.firstChild.remove();
+                        var item = {
+                            type: 'repeat',
+                            container: container,
+                            template: tmpChild,
+                            dataKey: container.getAttribute('data-repeat')
+                        };
+                        _this.components.push(item);
                     });
                 }
                 WebComponents.prototype.setData = function (_data) {
@@ -155,8 +157,8 @@ System.register(["./net/client"], function (exports_1, context_1) {
                 };
                 WebComponents.prototype.refresh = function () {
                     var _this = this;
-                    this.replacedElements.forEach(function (item) {
-                        if (item.name == 'data-repeat') {
+                    this.components.forEach(function (item) {
+                        if (item.type === 'repeat') {
                             _this.dataRepeat(item);
                         }
                     });
@@ -165,19 +167,27 @@ System.register(["./net/client"], function (exports_1, context_1) {
                     return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
                 };
                 WebComponents.prototype.dataRepeat = function (item) {
-                    if (item.value in this.data && this.data[item.value] instanceof Array) {
-                        var thisData = this.data[item.value];
-                        for (var i = 0; i <= thisData.length; i++) {
-                            var itemData = thisData[i];
-                            var newContainer = container.cloneNode(true);
-                            newContainer.removeAttribute('data-repeat');
-                            this.insertAfter(newContainer, container);
-                            this.dataRepeatItem(newContainer, itemData);
-                            container = newContainer;
-                        }
+                    console.log(item);
+                    item.container.innerHTML = '';
+                    if (item.dataKey in this.data && this.data[item.dataKey] instanceof Array) {
+                        var thisData = this.data[item.dataKey];
+                        var index_1 = -1;
+                        thisData.forEach(function (itemData) {
+                            index_1++;
+                            var newItemElement = item.template.cloneNode(true);
+                            var dataTexts = newItemElement.querySelectorAll('[data-text]');
+                            [].forEach.call(dataTexts, function (dataText) {
+                                var attr = dataText.getAttribute('data-text');
+                                if (attr === '$index') {
+                                    dataText.innerHTML = index_1;
+                                }
+                                else {
+                                    dataText.innerHTML = itemData[attr];
+                                }
+                            });
+                            item.container.appendChild(newItemElement);
+                        });
                     }
-                };
-                WebComponents.prototype.dataRepeatItem = function (container, data) {
                 };
                 return WebComponents;
             }());
